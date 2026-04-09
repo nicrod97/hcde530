@@ -1,0 +1,9 @@
+participant_id,role,response
+P101,UX Researcher,"I interviewed five participants and noticed onboarding confusion in the first two screens."
+P102,Product Manager,"We shipped quickly, but we still need clearer success metrics for retention."
+P103,UX Designer,"The prototype tested well, though people struggled to find account settings."
+P104,Content Strategist,"Users understood the main flow, but error messages felt unclear and too technical."
+P105,UX Researcher,"Remote interviews helped us include participants from different regions and contexts."
+P106,Product Manager,"We should prioritize bug fixes before adding another feature to the roadmap."
+P107,UX Designer,"A simpler navigation menu reduced task time during usability testing."
+P108,Content Strategist,"Consistent labels across pages improved comprehension and reduced hesitation."
