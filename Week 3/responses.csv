@@ -1,0 +1,85 @@
+name,role,age,country,most used tool on the job
+zx_01,dev??,twenty,US??,vscode???
+NULL_USER,ANALYST,999,Atlantis,spreadsheet_final_FINAL.xlsx
+ ,intern,18, ,notes app
+__temp__, designer ,27,us,fig ma
+User-404,manager,4O,UK,Excel!!!
+M4x_Pwr,researcher,35,DE,python3.9
+Jane*Doe,Student,22,CA,Canva
+alpha beta,qa engineer,31,USA,post man
+ghost,,,N/A,
+no_name,developer,29,USA,VS Code
+no_name,DEVELOPER,29,USA,VSCode
+beta_user, product owner,44,USA,jira cloud
+"   ",analyst,26,France,Tableau
+test_account_1,intern,19,MX,google docs
+QWERTY,Manager,47,usa,EXCEL
+john smith,designer,33,United States,Figma
+john smith,designer,33,United States,Figma
+id_7782,researcher,38,UK,RStudio
+n00bCoder,devEloper,24,India,pycharm
+Data Wizard,DATA ANALYST,28,Canada,power bi
+??? ,student,21,?,chatgpt
+R2D2,engineer,112,Tatooine,hyperdrive shell
+Leia Organa,lead,29,Alderaan,Holodesk
+Bruce Wayne,manager,41,Gotham,Excel
+Clark Kent,reporter,35,Metropolis,Word
+12345,intern,17,USA,notepad
+Mina,UX Designer,30,Japan,Figma
+Mina, ux designer ,30,Japan,Figma
+sam.sample,researcher,34,USA,Python
+sam sample,researcher,34,USA,python
+X Æ A-12,student,5,Mars,mind map app
+Admin,administrator,52,US,Terminal
+root,admin,52,US,terminal
+guest,user, ,US,web browser
+temp_02,developer,-1,USA,VS Code
+temp_03,developer,200,USA,VS Code
+L0REM IPSUM,analyst,28,IT,sql
+dolor_sit,analyst,28,it,SQL
+amy pond,manager,32,UK,Trello
+rory williams,intern,32,uk,slack
+The Doctor,time lord,1200,Gallifrey,Sonic Screwdriver
+Martha Jones,researcher,31,UK,python
+Donna Noble,assistant,34,UK,excel
+river.song, archaeologist,42,Unknown,library db
+Rose Tyler,support,27,UK,zendesk
+jack.h,captain,45,Boeshane,comms panel
+unit_test_user_7,developer,29,US,pytest
+unit_test_user_8,developer,29,US,pytest
+bot-alpha,automation,3,cloud,ci/cd
+bot-beta,automation,3,cloud,ci-cd
+alice,business analyst,36,USA,PowerBI
+bob,business analyst,36,USA,power bi
+charlie,Designer,31,Canada,Figma
+delta,designer,31,Canada,figma
+echo,designer,31,Canada,FIGMA
+foxtrot,project manager,39,USA,Asana
+golf,project manager,39,USA,asana
+hotel,project-manager,39,USA,Asana
+india,developer,28,IN,VS Code
+juliet,developer,28,IN,v s code
+kilo,developer,28,IN,vscode
+lima,student,23,BR,canva
+mike,student,23,BR,Canva
+november,student,23,BR,CANVA
+oscar,intern,20,AR,google docs
+papa,intern,20,AR,GoogleDocs
+quebec,intern,20,AR,GDocs
+romeo,researcher,37,US,R
+sierra,researcher,37,US,r
+tango,researcher,37,US,RStudio
+uniform,analyst,29,US,Excel
+victor,analyst,29,US,spreadsheet
+whiskey,analyst,29,US,sheet
+xray,manager,45,US,Jira
+yankee,manager,45,US,jira
+zulu,manager,45,US,JIRA
+,,,,
+name_missing_role,,30,USA,Notion
+role_missing_name,developer,30,USA,Notion
+"",analyst,33,USA,Tableau
+" ",designer,25,USA,Figma
+N/A,N/A,N/A,N/A,N/A
+unknown,unknown,unknown,unknown,unknown
+LAST_ROW,FINAL boss,88,???,"Tool, maybe"
