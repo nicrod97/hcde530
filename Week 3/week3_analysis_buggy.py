@@ -1,4 +1,5 @@
 import csv
+import re
 
 # Load the survey data from a CSV file
 filename = "week3_survey_messy.csv"
@@ -23,6 +24,27 @@ for row in rows:
 print("Responses by role:")
 for role, count in sorted(role_counts.items()):
     print(f"  {role}: {count}")
+
+
+# Flag rows with invalid age ranges
+# Valid format is "##-##" with both values between 16 and 100
+def flag_invalid_ages(rows, field="age_range", min_age=16, max_age=100):
+    flagged = []
+    for i, row in enumerate(rows):
+        value = row.get(field, "").strip()
+        match = re.fullmatch(r"(\d+)-(\d+)", value)
+        if not match:
+            flagged.append((i + 2, row.get("participant_name", "?"), value or "(empty)"))
+        else:
+            low, high = int(match.group(1)), int(match.group(2))
+            if low < min_age or high > max_age or low >= high:
+                flagged.append((i + 2, row.get("participant_name", "?"), value))
+    return flagged
+
+invalid_ages = flag_invalid_ages(rows)
+print(f"\nInvalid age ranges found: {len(invalid_ages)}")
+for row_num, name, value in invalid_ages:
+    print(f"  Row {row_num} ({name}): '{value}'")
 
 
 # Calculate the average years of experience
