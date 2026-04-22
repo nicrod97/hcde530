@@ -48,8 +48,7 @@ for row_num, name, value in invalid_ages:
 
 
 # Calculate the average years of experience
-# FIX LOCATION: This block replaces the original direct int conversion.
-# We safely parse "experience_years" so text values like "fifteen" do not crash the script.
+# Fixed parsing "experience_years" so text values like "fifteen" do not crash the script.
 total_experience = 0
 valid_experience_count = 0
 

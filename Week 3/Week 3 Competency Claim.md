@@ -1,0 +1,3 @@
+# Week 3 Competency Claim
+
+This week I succesfully identified the root cause of the "ValueError" in the script before asking the agent to explain the error that the terminal gave me. Incorporated the recommended fix from the agent and added a new function that works on top of the existing ones with no errors. The script now reports reponses by role, invalid age ranges found, average years of experience and top 5 satisfaction scores. 
