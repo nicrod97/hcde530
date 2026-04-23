@@ -1,3 +1,6 @@
+# Local secrets — never commit real keys (Week 4 and elsewhere)
+**/.env
+
 .DS_Store
 __pycache__/
 *.py[cod]

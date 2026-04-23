@@ -17,6 +17,16 @@ Use this structure as the source of truth for file locations in this project:
 ```text
 hcde530/
 ├── .gitignore
+├── Week 3/
+│   ├── clean_responses.py
+│   ├── count_roles.py
+│   └── week3_analysis_buggy.py
+├── Week 4/
+│   ├── .env.example
+│   ├── artic_artworks_api.py
+│   ├── build_review_dashboard.py
+│   ├── fetch_artic_artworks_csv.py
+│   └── fetch_reviews.py
 └── HCDE530 Week 2/
     ├── .gitignore
     ├── CONTEXT.md
