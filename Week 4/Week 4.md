@@ -1,0 +1,3 @@
+## Week 4 Competency Claim
+
+I called NASA’s Astronomy Picture of the Day API (`planetary/apod`), read the docs for parameters and response shape, and wrote `nasa_apod_api.py` to request the endpoint, parse the JSON, and save selected fields to `nasa_apod_results.csv`. The API returns one object or a list of objects with metadata for each image or video (`title`, `date`, `url`, etc.). I keep my key in `NASA_API_KEY` in a `/.env` listed on the week 4 folder along side the `.gitignore` so it never ships with the repo.
