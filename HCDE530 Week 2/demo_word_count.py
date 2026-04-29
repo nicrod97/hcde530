@@ -5,19 +5,25 @@ import csv
 filename = "demo_responses.csv"
 responses = []
 
-#opens the CSV file and reads the data into the responses list, loops through each row and stores the data in the responses list
+# newline="" avoids blank rows on Windows-style CSV line endings; utf-8 matches our saved files.
 with open(filename, newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     for row in reader:
         responses.append(row)
 
 
-#Defines the reusable function that takes one response string. Splits the text into words by whitespace and returns the word count.
-def count_words(response):
-    """Count the number of words in a response string.
+def count_words(response: str) -> int:
+    """Count words in one response string for length summaries.
 
-    Takes a string, splits it on whitespace, and returns the word count.
-    Used to measure response length across all participants.
+    Parameters
+    ----------
+    response
+        Raw text from the ``response`` column for one row.
+
+    Returns
+    -------
+    int
+        Number of whitespace-separated words (same rule as Week 2 summary script).
     """
     return len(response.split())
 
@@ -38,7 +44,7 @@ for row in responses:
     count = count_words(response)
     word_counts.append(count)
 
-    # Creates a shorter preview of the response for display
+    # Truncate so the terminal table stays readable on narrow windows.
     if len(response) > 60:
         preview = response[:60] + "..."
     else:
