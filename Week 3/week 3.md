@@ -1,17 +1,3 @@
-# Week 3 Competency Claim — C3 (data cleaning and file handling, resubmission)
+# Week 3 Competency Claim 
 
-## ValueError on `experience_years`
-
-I got `ValueError: invalid literal for int() with base 10: 'fifteen'` and, **before** asking an agent to explain the traceback, I traced the failure to one row: `experience_years` held the **English word** `fifteen`, not the digit string `"15"`. Python’s `int()` only accepts strings that are valid integer literals (digits, optional sign)—not number words. That is the gap between data that **looks** numeric to a person (a column labeled “years of experience”) and data that **is** numeric to the parser: the CSV still stores text, and a word like `fifteen` cannot be converted the same way as `"15"`. I wrapped the conversion in `try`/`except ValueError`, skip non-parseable rows, and compute the average only over rows where `int(...)` succeeds.
-
-## Top satisfaction scores (sort bug)
-
-For “top 5” satisfaction I had sorted scores **ascending** (Python’s default) and then taken `[:5]`, which returned the **five lowest** scores, not the highest. The fix is to sort **descending** (`reverse=True` on the score) before slicing, so the first five rows are the true top five. That change is in `week3_analysis_buggy.py` alongside this resubmission.
-
-## CSV cleaning and repeatable output
-
-`clean_responses.py` reads `responses.csv` (not hardcoded rows), drops rows with empty names, normalizes `role`, and writes `responses cleaned.csv`. `week3_analysis_buggy.py` reads `week3_survey_messy.csv`, normalizes roles for counting, flags malformed `age_range` values, and prints summaries in a stable order each run.
-
-## Commits
-
-Earlier commit messages on this branch were vague (“added new function,” etc.) and did not spell out the ValueError cause or the sort bug. This resubmission adds the explanations above and a new commit that states the satisfaction **sort direction fix** explicitly so the history matches what changed and why.
+Before asking an agent, I traced `ValueError: invalid literal for int() with base 10: 'fifteen'` to a row where `experience_years` was the word `fifteen`, not a digit string like `"15"`: the column looked numeric, but `int()` only accepts numeric values, so I use `try`/`except` and average only parseable rows. I also fixed “top 5” satisfaction, default `sort` is ascending, so `[:5]` was the **lowest** scores; `reverse=True` gives the five **highest**. My scripts read from CSV (`responses.csv` → `responses cleaned.csv` in `clean_responses.py`; `week3_survey_messy.csv` in `week3_analysis_buggy.py`) with role and age-range cleanup for repeatable output. A recent commit message states the sort fix and this note ties the ValueError cause to the code, older commits were too vague.
