@@ -1,0 +1,111 @@
+source,time_range_key,rank,artist,name,album,release_year,duration_sec,explicit,time_range,track,played_at,context
+top_artists,short_term,1.0,Pink Floyd,,,,,,,,,
+top_artists,short_term,2.0,Yandel,,,,,,,,,
+top_artists,short_term,3.0,Feid,,,,,,,,,
+top_artists,short_term,4.0,Radiohead,,,,,,,,,
+top_artists,short_term,5.0,Omar Courtz,,,,,,,,,
+top_artists,short_term,6.0,Olivia Dean,,,,,,,,,
+top_artists,short_term,7.0,Trueno,,,,,,,,,
+top_artists,short_term,8.0,Harry Styles,,,,,,,,,
+top_artists,short_term,9.0,Lenny Kravitz,,,,,,,,,
+top_artists,short_term,10.0,Nsqk,,,,,,,,,
+top_artists,medium_term,1.0,Pink Floyd,,,,,,,,,
+top_artists,medium_term,2.0,Feid,,,,,,,,,
+top_artists,medium_term,3.0,Radiohead,,,,,,,,,
+top_artists,medium_term,4.0,Omar Courtz,,,,,,,,,
+top_artists,medium_term,5.0,Milo j,,,,,,,,,
+top_artists,medium_term,6.0,Mac DeMarco,,,,,,,,,
+top_artists,medium_term,7.0,Olivia Dean,,,,,,,,,
+top_artists,medium_term,8.0,Brent Faiyaz,,,,,,,,,
+top_artists,medium_term,9.0,Yandel,,,,,,,,,
+top_artists,medium_term,10.0,Fontaines D.C.,,,,,,,,,
+top_artists,long_term,1.0,Pink Floyd,,,,,,,,,
+top_artists,long_term,2.0,Feid,,,,,,,,,
+top_artists,long_term,3.0,Radiohead,,,,,,,,,
+top_artists,long_term,4.0,Mac DeMarco,,,,,,,,,
+top_artists,long_term,5.0,Mac Miller,,,,,,,,,
+top_artists,long_term,6.0,The Doors,,,,,,,,,
+top_artists,long_term,7.0,Bad Bunny,,,,,,,,,
+top_artists,long_term,8.0,Brent Faiyaz,,,,,,,,,
+top_artists,long_term,9.0,Jeff Buckley,,,,,,,,,
+top_artists,long_term,10.0,Drake,,,,,,,,,
+top_tracks,,,Harry Styles,American Girls,"Kiss All The Time. Disco, Occasionally.",2026.0,213.0,False,Last 4 Weeks,,,
+top_tracks,,,Trueno,TURRAZO,TURR4ZO,2026.0,138.0,True,Last 4 Weeks,,,
+top_tracks,,,Yandel,Como Es Que Se Hace,Infinito,2026.0,205.0,True,Last 4 Weeks,,,
+top_tracks,,,Yandel,Pa' ti Full,Infinito,2026.0,104.0,True,Last 4 Weeks,,,
+top_tracks,,,Omar Courtz,KOKO,POR SI MAÑANA NO ESTOY,2026.0,195.0,True,Last 4 Weeks,,,
+top_tracks,,,Young Miko,BIAF <3,BIAF <3,2026.0,170.0,True,Last 4 Weeks,,,
+top_tracks,,,Yandel,A Vapor,Infinito,2026.0,152.0,True,Last 4 Weeks,,,
+top_tracks,,,sombr,Potential,Potential,2026.0,243.0,False,Last 4 Weeks,,,
+top_tracks,,,Pink Floyd,Shine On You Crazy Diamond (Pts. 1-5),Wish You Were Here,1975.0,813.0,False,Last 4 Weeks,,,
+top_tracks,,,Harry Styles,Sign of the Times,Harry Styles,2017.0,341.0,False,Last 4 Weeks,,,
+top_tracks,,,Yandel,Como Es Que Se Hace,Infinito,2026.0,205.0,True,Last 6 Months,,,
+top_tracks,,,Feid,I MIXX U,FERXXO VOL X: Sagrado,2025.0,229.0,False,Last 6 Months,,,
+top_tracks,,,DOPE LEMON,Salt & Pepper,Smooth Big Cat,2019.0,329.0,False,Last 6 Months,,,
+top_tracks,,,Harry Styles,American Girls,"Kiss All The Time. Disco, Occasionally.",2026.0,213.0,False,Last 6 Months,,,
+top_tracks,,,The Strokes,Ode To The Mets,The New Abnormal,2020.0,352.0,True,Last 6 Months,,,
+top_tracks,,,Feid,TRANKAITO,EL GREEN PRINT: La Saga (Disc 1) — FEID VS FERXXO,2026.0,162.0,False,Last 6 Months,,,
+top_tracks,,,Olivia Dean,Nice To Each Other,Nice To Each Other,2025.0,209.0,False,Last 6 Months,,,
+top_tracks,,,Milo j,OLIMPO,166 (DELUXE) retirada,2025.0,169.0,False,Last 6 Months,,,
+top_tracks,,,EsDeeKid,4 Raws,Rebel,2025.0,147.0,True,Last 6 Months,,,
+top_tracks,,,Pink Floyd,Shine On You Crazy Diamond (Pts. 1-5),Wish You Were Here,1975.0,813.0,False,Last 6 Months,,,
+top_tracks,,,Gustavo Cerati,Vivo,Siempre Es Hoy,2002.0,261.0,False,All Time,,,
+top_tracks,,,Alvaro Diaz,GATITAS SANDUNGUERAS - VOL.1,GATITAS SANDUNGUERAS VOL.1,2024.0,132.0,False,All Time,,,
+top_tracks,,,SAIKO,BADGYAL,SAKURA,2024.0,254.0,True,All Time,,,
+top_tracks,,,Bad Bunny,VeLDÁ,DeBÍ TiRAR MáS FOToS,2025.0,235.0,True,All Time,,,
+top_tracks,,,Pink Floyd,Shine On You Crazy Diamond (Pts. 1-5),Wish You Were Here,1975.0,813.0,False,All Time,,,
+top_tracks,,,Pink Floyd,"Another Brick in the Wall, Pt. 2",The Wall,1979.0,239.0,False,All Time,,,
+top_tracks,,,Mk.gee,ROCKMAN,ROCKMAN,2024.0,179.0,False,All Time,,,
+top_tracks,,,Jeff Buckley,Everybody Here Wants You,Sketches for My Sweetheart The Drunk (Expanded Edition),1998.0,287.0,False,All Time,,,
+top_tracks,,,Pink Floyd,Comfortably Numb,The Wall,1979.0,382.0,False,All Time,,,
+top_tracks,,,Alvaro Diaz,GATITAS SANDUNGUERAS - VOL.1,SAYONARA,2024.0,132.0,False,All Time,,,
+recently_played,,,Daft Punk,,,2013.0,,,,The Game of Love,2026-05-06 18:57:23.626000+00:00,album
+recently_played,,,Daft Punk,,,2013.0,,,,Give Life Back to Music,2026-05-06 18:52:01.889000+00:00,album
+recently_played,,,Daft Punk,,,2013.0,,,,Contact,2026-05-06 18:47:26.144000+00:00,album
+recently_played,,,Daft Punk,,,2013.0,,,,Doin' it Right (feat. Panda Bear),2026-05-06 18:41:02.070000+00:00,album
+recently_played,,,Daft Punk,,,2013.0,,,,Fragments of Time (feat. Todd Edwards),2026-05-06 18:36:51.040000+00:00,album
+recently_played,,,Bombay Bicycle Club,,,2011.0,,,,"Lights Out, Words Gone",2026-05-06 18:29:17.957000+00:00,album
+recently_played,,,Daryl Hall & John Oates,,,1981.0,,,,I Can't Go for That (No Can Do),2026-05-06 18:22:27.925000+00:00,album
+recently_played,,,Gilsons,,,2019.0,,,,Vento Alecrim,2026-05-06 18:17:20.099000+00:00,album
+recently_played,,,HEAVY CHEST,,,2020.0,,,,Amsterdam,2026-05-06 18:14:22.188000+00:00,playlist
+recently_played,,,Joy Rhodes,,,2026.0,,,,i love me,2026-05-06 06:24:03.961000+00:00,unknown
+recently_played,,,De La Rose,,,2025.0,,,,Yo te conozco :):,2026-05-06 06:21:01.454000+00:00,unknown
+recently_played,,,Michelle Maciel,,,2026.0,,,,SMHQEB,2026-05-06 06:19:02.105000+00:00,unknown
+recently_played,,,Feid,,,2021.0,,,,FUMETEO,2026-05-06 06:14:34.465000+00:00,unknown
+recently_played,,,Feid,,,2026.0,,,,La Mejor Música,2026-05-06 06:12:21.727000+00:00,unknown
+recently_played,,,Central Cee,,,2026.0,,,,WAGWAN,2026-05-06 06:06:33.947000+00:00,unknown
+recently_played,,,The Strokes,,,2020.0,,,,Brooklyn Bridge To Chorus,2026-05-06 06:04:32.628000+00:00,album
+recently_played,,,The Strokes,,,2020.0,,,,Selfless,2026-05-05 23:58:08.406000+00:00,album
+recently_played,,,The Strokes,,,2020.0,,,,The Adults Are Talking,2026-05-05 23:54:26.265000+00:00,album
+recently_played,,,The Strokes,,,2020.0,,,,Ode To The Mets,2026-05-05 23:49:16.811000+00:00,album
+recently_played,,,The Strokes,,,2020.0,,,,Not The Same Anymore,2026-05-05 23:43:32.100000+00:00,album
+recently_played,,,The Strokes,,,2020.0,,,,Not The Same Anymore,2026-05-05 23:40:34.948000+00:00,album
+recently_played,,,Harry Styles,,,2026.0,,,,American Girls,2026-05-05 23:22:51.067000+00:00,unknown
+recently_played,,,Deftones,,,2025.0,,,,i think about you all the time,2026-05-05 23:17:30.468000+00:00,unknown
+recently_played,,,Neural Rhythms,,,2026.0,,,,Mellow Mosaic,2026-05-05 23:13:18.928000+00:00,unknown
+recently_played,,,Central Cee,,,2026.0,,,,WAGWAN,2026-05-05 23:09:37.076000+00:00,unknown
+recently_played,,,Pale Jay,,,2024.0,,,,The Garden,2026-05-05 23:07:00.002000+00:00,unknown
+recently_played,,,Joy Rhodes,,,2026.0,,,,i love me,2026-05-05 23:03:15.783000+00:00,unknown
+recently_played,,,Jason Joshua,,,2021.0,,,,Rose Gold,2026-05-05 19:01:59.244000+00:00,playlist
+recently_played,,,Tokyo Tea Room,,,2025.0,,,,There's A Place,2026-05-05 18:56:48.435000+00:00,playlist
+recently_played,,,Skinshape,,,2017.0,,,,Take My Time,2026-05-05 18:53:58.534000+00:00,playlist
+recently_played,,,The Holydrug Couple,,,2015.0,,,,If I Could Find You (Eternity),2026-05-05 18:51:00.001000+00:00,playlist
+recently_played,,,Naomi Sharon,,,2021.0,,,,Daughter Of The Sun,2026-05-05 18:47:53.073000+00:00,playlist
+recently_played,,,Loaded Honey,,,2025.0,,,,In Your Arms,2026-05-05 18:43:55.355000+00:00,playlist
+recently_played,,,Half Moon Run,,,2015.0,,,,Narrow Margins,2026-05-05 18:40:20.563000+00:00,playlist
+recently_played,,,Faye Meana,,,2021.0,,,,Better Than Her,2026-05-05 18:36:09.216000+00:00,playlist
+recently_played,,,Paradis,,,2016.0,,,,Quand Tu Souris,2026-05-05 18:31:39.068000+00:00,playlist
+recently_played,,,Still Corners,,,2021.0,,,,Static,2026-05-05 18:26:37.036000+00:00,playlist
+recently_played,,,Kings of Leon,,,2021.0,,,,Claire & Eddie,2026-05-05 18:22:40.475000+00:00,playlist
+recently_played,,,Cloak Bay,,,2020.0,,,,Batskin Dims,2026-05-05 18:17:47.603000+00:00,playlist
+recently_played,,,Feng Suave,,,2017.0,,,,"Honey, There's No Time",2026-05-05 18:13:59.192000+00:00,playlist
+recently_played,,,Yellow Days,,,2021.0,,,,Belong Together,2026-05-05 18:09:37.979000+00:00,playlist
+recently_played,,,Bird and Byron,,,2022.0,,,,By My Side,2026-05-05 18:08:23.213000+00:00,playlist
+recently_played,,,Tomos,,,2025.0,,,,Soul Feels Good,2026-05-05 17:50:11.595000+00:00,playlist
+recently_played,,,Yellow House,,,2018.0,,,,Ain't Gonna Call,2026-05-05 17:45:46.465000+00:00,playlist
+recently_played,,,Dal,,,2020.0,,,,Those Days,2026-05-05 17:42:06.587000+00:00,playlist
+recently_played,,,Pale Jay,,,2024.0,,,,The Garden,2026-05-05 17:38:16.884000+00:00,playlist
+recently_played,,,Mild Orange,,,2018.0,,,,Mysight,2026-05-05 17:34:28.555000+00:00,playlist
+recently_played,,,Sade,,,1985.0,,,,Never as Good as the First Time,2026-05-05 17:30:09.009000+00:00,playlist
+recently_played,,,Justice,,,2024.0,,,,Neverender,2026-05-05 06:02:10.581000+00:00,playlist
+recently_played,,,Daft Punk,,,2013.0,,,,Lose Yourself to Dance (feat. Pharrell Williams),2026-05-05 05:58:12.024000+00:00,playlist
