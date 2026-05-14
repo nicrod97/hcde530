@@ -1,0 +1,3 @@
+## Week 6 Competency Claim
+
+In `week6_mp1_starter.ipynb`, I used Python charts with `plotly` (and `kaleido` to export figures) to make clear claims from my Spotify data by matching chart type to question and structure: a horizontal bar chart for artist rank movement (many categories and long labels), a grouped bar chart for decade comparisons, and a release-year distribution plot for spread over time. I began the explainations for each chart choice in markdown cells and interpreted what the results showed, so the notebook documents both method and reasoning; the published GitHub notebook includes code, outputs, and written findings that someone else can follow end to end. The exported visualizations are in a folder in the `.png` format that was required. 
