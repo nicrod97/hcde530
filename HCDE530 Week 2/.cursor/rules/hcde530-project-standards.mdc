@@ -31,7 +31,7 @@ hcde530/
 └── HCDE530 Week 2/
     ├── .gitignore
     ├── CONTEXT.md
-    ├── week 2.md
+    ├── week2.md
     ├── dashboard.html
     ├── demo_responses.csv
     ├── dummy_responses.csv
@@ -48,6 +48,38 @@ hcde530/
 - Keep the tree concise: include key project files and folders only; skip generated artifacts and caches.
 - If a path in code changes, update references in scripts or instructions to match the new structure.
 - Before finishing substantial edits, quickly verify the tree still matches the current repo layout.
+
+## Assignment Priorities (Week 2)
+
+- Output correctness is the highest priority.
+- Keep all work beginner-friendly and instructional.
+- Use plain language and avoid jargon-heavy explanations.
+- Do not rename, move, or restructure assignment files/folders unless explicitly requested.
+
+## Runtime and Path Rules
+
+- Week 2 scripts should run from either location:
+  - From `HCDE530 Week 2`: `python3 demo_word_count.py`
+  - From repo root: `python3 "HCDE530 Week 2/demo_word_count.py"`
+- Use robust relative paths derived from the script location.
+- If paths change, update script references and documentation in the same task.
+
+## Error Handling Style
+
+- Prefer fail-fast behavior for invalid input or data.
+- Error messages should be short, specific, and include a fix hint when practical.
+- Preferred format example:
+  - `Missing required column: response. Check your CSV header names.`
+
+## Output Focus (Week 2 Analysis)
+
+- Prioritize the top 5 longest responses by word count.
+- Show only the fields needed for assignment output: word count and response text.
+
+## Scope Guardrails
+
+- Treat `dashboard.html` as a supporting demo artifact, not the source of truth for analysis output.
+- Avoid advanced software-engineering patterns unless explicitly required by the assignment.
 
 ## Python Conventions
 
