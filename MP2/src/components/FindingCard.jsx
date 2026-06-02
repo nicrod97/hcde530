@@ -48,7 +48,7 @@ const REC_BORDER = {
 };
 
 export default function FindingCard({ finding }) {
-  const { title, severity, category, heuristic, wcag, effort, description, recommendation } = finding;
+  const { id, title, severity, category, heuristic, wcag, effort, description, recommendation } = finding;
   const [expanded, setExpanded] = useState(false);
 
   const stripeColor  = SEVERITY_STRIPE[severity]  ?? SEVERITY_STRIPE.cosmetic;
@@ -58,9 +58,14 @@ export default function FindingCard({ finding }) {
   const recBorder    = REC_BORDER[severity]        ?? REC_BORDER.cosmetic;
 
   const heuristicName = heuristic ? HEURISTICS[heuristic] : null;
+  const detailsId = `finding-details-${id}`;
+  const titleId = `finding-title-${id}`;
 
   return (
-    <article className="relative bg-white rounded-xl overflow-hidden flex flex-col border border-zinc-200 hover:border-zinc-300 transition-colors">
+    <article
+      className="relative bg-white rounded-xl overflow-hidden flex flex-col border border-zinc-200 hover:border-zinc-300 transition-colors"
+      aria-labelledby={titleId}
+    >
 
       {/* Left severity stripe */}
       <div className={`absolute left-0 top-0 bottom-0 w-1 ${stripeColor}`} />
@@ -76,7 +81,7 @@ export default function FindingCard({ finding }) {
         </div>
 
         {/* Title — dominant */}
-        <h3 className="font-bold text-zinc-950 text-[14px] leading-snug">
+        <h3 id={titleId} className="font-bold text-zinc-950 text-[14px] leading-snug">
           {title}
         </h3>
 
@@ -102,28 +107,33 @@ export default function FindingCard({ finding }) {
 
       </div>
 
-      {/* Expanded detail section */}
-      {expanded && (
-        <div className="pl-5 pr-5 pt-1 pb-5 flex flex-col gap-4 border-t border-zinc-100">
-          <p className="text-sm text-zinc-600 leading-relaxed pt-3">{description}</p>
-
-          <div className={`pl-4 py-3 border-l-2 ${recBorder} bg-zinc-50 rounded-r-lg`}>
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.15em] mb-2">
-              Recommendation
-            </p>
-            <p className="text-sm text-zinc-700 leading-relaxed">{recommendation}</p>
-          </div>
-        </div>
-      )}
-
       {/* Expand toggle */}
       <button
+        type="button"
         onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        aria-controls={detailsId}
         className="pl-5 pr-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 border-t border-zinc-200 flex items-center justify-between text-[11px] font-bold text-zinc-500 hover:text-zinc-950 transition-all cursor-pointer w-full"
       >
         <span>{expanded ? 'Hide details' : 'Show details'}</span>
         <ChevronIcon expanded={expanded} />
       </button>
+
+      {/* Expanded detail section */}
+      <div id={detailsId} hidden={!expanded}>
+        {expanded && (
+          <section className="pl-5 pr-5 pt-1 pb-5 flex flex-col gap-4 border-t border-zinc-100" aria-label={`Details for ${title}`}>
+            <p className="text-sm text-zinc-600 leading-relaxed pt-3">{description}</p>
+
+            <section className={`pl-4 py-3 border-l-2 ${recBorder} bg-zinc-50 rounded-r-lg`} aria-label="Recommendation">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.15em] mb-2">
+                Recommendation
+              </p>
+              <p className="text-sm text-zinc-700 leading-relaxed">{recommendation}</p>
+            </section>
+          </section>
+        )}
+      </div>
 
     </article>
   );

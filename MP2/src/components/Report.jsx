@@ -56,10 +56,12 @@ export default function Report({ report }) {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="bg-blue-50 border border-blue-200 rounded-xl px-6 py-4 flex flex-col gap-2">
+    <main className="flex flex-col gap-8" aria-label="Evaluation report">
+      <section className="bg-blue-50 border border-blue-200 rounded-xl px-6 py-4 flex flex-col gap-2" aria-labelledby="confidence-note-heading">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700">
+          <span id="confidence-note-heading">
           Confidence note
+          </span>
         </p>
         <p className="text-sm text-blue-900 leading-relaxed">
           This report is based on a static screenshot, so it may miss interaction-only issues
@@ -67,25 +69,31 @@ export default function Report({ report }) {
           guidance, then verify fixes in real usage and accessibility testing.
         </p>
         {_validationWarnings?.length > 0 && (
-          <p className="text-xs text-blue-800">
+          <p className="text-xs text-blue-800" role="status" aria-live="polite">
             Some model output was normalized for consistency before display.
           </p>
         )}
-      </div>
+      </section>
 
       {/* Persona written summary — card at top */}
       {persona_take && persona_take.trim() && (
-        <div className="bg-white rounded-xl border border-zinc-200 px-6 py-5 flex flex-col gap-2 shadow-sm">
+        <section
+          className="bg-white rounded-xl border border-zinc-200 px-6 py-5 flex flex-col gap-2 shadow-sm"
+          aria-labelledby="persona-perspective-heading"
+        >
           {persona && (
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-violet-500 flex-shrink-0" />
-              <p className="text-[10px] font-bold text-violet-700 uppercase tracking-[0.2em]">
+              <p
+                id="persona-perspective-heading"
+                className="text-[10px] font-bold text-violet-700 uppercase tracking-[0.2em]"
+              >
                 {persona} perspective
               </p>
             </div>
           )}
           <p className="text-sm text-zinc-700 leading-relaxed">{persona_take}</p>
-        </div>
+        </section>
       )}
 
       {/* Sidebar layout: numerical summary left, kanban right */}
@@ -95,7 +103,8 @@ export default function Report({ report }) {
           <SummaryBar summary={summary} />
         </aside>
 
-        <div className="flex-1 min-w-0 flex flex-col gap-4">
+        <section className="flex-1 min-w-0 flex flex-col gap-4" aria-labelledby="findings-heading">
+          <h2 id="findings-heading" className="sr-only">Findings</h2>
           <FilterBar
             selectedSeverities={selectedSeverities}
             selectedCategories={selectedCategories}
@@ -109,13 +118,21 @@ export default function Report({ report }) {
             onSearchChange={setSearchText}
             onClearAll={clearFilters}
           />
+          <p className="sr-only" role="status" aria-live="polite">
+            {hasActiveFilters
+              ? `${filteredFindings.length} findings match current filters out of ${findings.length}.`
+              : `Showing all ${findings.length} findings.`}
+          </p>
 
           {!hasActiveFilters && <KanbanBoard findings={findings} />}
 
           {hasActiveFilters && (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3" aria-live="polite">
               {filteredFindings.length === 0 ? (
-                <div className="rounded-xl border border-zinc-200 bg-white p-6 text-sm text-zinc-500">
+                <div
+                  className="rounded-xl border border-zinc-200 bg-white p-6 text-sm text-zinc-500"
+                  role="status"
+                >
                   No findings match current filters.
                 </div>
               ) : (
@@ -125,10 +142,10 @@ export default function Report({ report }) {
               )}
             </div>
           )}
-        </div>
+        </section>
 
       </div>
 
-    </div>
+    </main>
   );
 }

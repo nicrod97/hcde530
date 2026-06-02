@@ -35,6 +35,11 @@ export default function SessionHistory({
     ? allSessions.slice(0, initialVisibleCount)
     : allSessions;
 
+  function sessionLabel(session) {
+    const persona = personaLabel(session.personaKey, session.report?.persona);
+    return `${persona} analysis from ${formatWhen(session.createdAt)}`;
+  }
+
   if (!sessions || sessions.length === 0) {
     return (
       <section className="rounded-xl border border-zinc-200 bg-white p-4">
@@ -66,7 +71,7 @@ export default function SessionHistory({
             className="rounded-lg border border-zinc-200 p-2 flex items-center gap-2.5"
           >
             <img
-              src={session.thumbnailDataUrl}
+              src={session.thumbnailDataUrl || '/favicon.svg'}
               alt="Saved session screenshot preview"
               className="w-12 h-12 rounded-md border border-zinc-200 object-cover flex-shrink-0 bg-zinc-100"
             />
@@ -85,6 +90,7 @@ export default function SessionHistory({
               <button
                 type="button"
                 onClick={() => onOpen(session)}
+                aria-label={`Open ${sessionLabel(session)}`}
                 className="text-[10px] font-semibold px-2 py-1 rounded-md border border-zinc-300 text-zinc-600 hover:text-zinc-900 hover:border-zinc-500 transition-colors cursor-pointer"
               >
                 Open
@@ -92,6 +98,7 @@ export default function SessionHistory({
               <button
                 type="button"
                 onClick={() => onDelete(session.id)}
+                aria-label={`Delete ${sessionLabel(session)}`}
                 className="text-[10px] font-semibold px-2 py-1 rounded-md border border-red-200 text-red-500 hover:text-red-700 hover:border-red-300 transition-colors cursor-pointer"
               >
                 Delete

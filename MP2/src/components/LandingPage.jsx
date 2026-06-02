@@ -15,6 +15,7 @@ export default function LandingPage({
   const [image, setImage] = useState(null);
   const [persona, setPersona] = useState(null);
   const [dragOver, setDragOver] = useState(false);
+  const [uploadError, setUploadError] = useState('');
   const fileInputRef = useRef(null);
 
   function clearImagePreview() {
@@ -27,7 +28,12 @@ export default function LandingPage({
   }
 
   function handleFile(file) {
-    if (!file || !ACCEPTED_TYPES.includes(file.type)) return;
+    if (!file) return;
+    if (!ACCEPTED_TYPES.includes(file.type)) {
+      setUploadError('Unsupported file type. Please upload PNG, JPG, or WEBP.');
+      return;
+    }
+    setUploadError('');
     clearImagePreview();
     setImage({ file, previewUrl: URL.createObjectURL(file) });
   }
@@ -71,15 +77,14 @@ export default function LandingPage({
         <div className="flex flex-col gap-3">
           <StepLabel number={1} label="Upload a screenshot" active />
 
-          <div
-            role="button"
-            tabIndex={0}
+          <button
+            type="button"
             aria-label="Upload screenshot"
-            onClick={() => fileInputRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
+            aria-describedby="upload-help upload-error"
             onDrop={handleDrop}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
+            onClick={() => fileInputRef.current?.click()}
             className={[
               'relative rounded-xl border cursor-pointer transition-all select-none overflow-hidden',
               dragOver
@@ -87,6 +92,7 @@ export default function LandingPage({
                 : image
                 ? 'border-zinc-200 bg-white'
                 : 'border-zinc-200 bg-white hover:border-zinc-400',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2',
               image ? 'h-52' : 'h-36',
             ].join(' ')}
           >
@@ -109,10 +115,10 @@ export default function LandingPage({
                 <p className="text-sm text-zinc-500">
                   Drop or <span className="text-zinc-950 font-semibold">click to upload</span>
                 </p>
-                <p className="text-[11px] text-zinc-400 font-mono">PNG · JPG · WEBP</p>
+                <p id="upload-help" className="text-[11px] text-zinc-400 font-mono">PNG · JPG · WEBP</p>
               </div>
             )}
-          </div>
+          </button>
 
           <input
             ref={fileInputRef}
@@ -121,13 +127,25 @@ export default function LandingPage({
             className="hidden"
             onChange={(e) => handleFile(e.target.files?.[0])}
           />
+          <p
+            id="upload-error"
+            role="status"
+            aria-live="polite"
+            className={['text-xs', uploadError ? 'text-red-600' : 'sr-only'].join(' ')}
+          >
+            {uploadError || ' '}
+          </p>
         </div>
 
           {/* Step 2 — Persona */}
-          <div className={['flex flex-col gap-3 transition-opacity', step2Active ? 'opacity-100' : 'opacity-35 pointer-events-none'].join(' ')}>
+          <fieldset
+            className={['flex flex-col gap-3 transition-opacity', step2Active ? 'opacity-100' : 'opacity-35 pointer-events-none'].join(' ')}
+            disabled={!step2Active}
+          >
             <StepLabel number={2} label="Choose evaluation voice" active={step2Active} />
 
-            <div className="flex flex-wrap gap-1.5">
+            <legend className="sr-only">Choose evaluation voice</legend>
+            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Evaluation voice">
               <PersonaPill
                 label="Base"
                 description="No specific voice — plain neutral recommendations."
@@ -148,7 +166,7 @@ export default function LandingPage({
             {persona && (
               <p className="text-xs text-zinc-500 leading-relaxed">{PERSONAS[persona]?.description}</p>
             )}
-          </div>
+          </fieldset>
 
           {/* Analyze button */}
           <div className="flex flex-col gap-3">
@@ -164,7 +182,6 @@ export default function LandingPage({
             >
               {isLoading ? 'Analyzing…' : 'Analyze interface'}
             </button>
-            <p className="text-[11px] text-zinc-400 text-center font-mono">Powered by Claude</p>
           </div>
         </div>
 
@@ -202,12 +219,16 @@ function StepLabel({ number, label, active }) {
 function PersonaPill({ label, selected, onClick }) {
   return (
     <button
+      type="button"
+      role="radio"
+      aria-checked={selected}
       onClick={onClick}
       className={[
         'rounded-full px-3 py-1 text-xs font-semibold transition-colors cursor-pointer border',
         selected
           ? 'bg-zinc-950 text-white border-zinc-950'
           : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-950 hover:text-zinc-950',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2',
       ].join(' ')}
     >
       {label}

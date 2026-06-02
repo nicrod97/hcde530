@@ -3,7 +3,6 @@ import LandingPage from './components/LandingPage.jsx';
 import Report from './components/Report.jsx';
 import SessionHistory from './components/SessionHistory.jsx';
 import { analyzeInterface, createThumbnailDataUrl } from './lib/api.js';
-import { PERSONAS } from './lib/personas.js';
 import './App.css';
 
 const STORAGE_KEY = 'evalbridge.sessions.v1';
@@ -30,8 +29,6 @@ export default function App() {
   const [status, setStatus] = useState('idle');
   const [report, setReport] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
-  const [lastMessage, setLastMessage] = useState(null);
-  const [, setPersona] = useState(null);
   const [sessions, setSessions] = useState(() => loadSessions().slice(0, MAX_SESSIONS));
   const [showRecentSidebar, setShowRecentSidebar] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
@@ -39,9 +36,6 @@ export default function App() {
 
   async function handleAnalyze(imageFile, contextText, personaKey) {
     const nextPersona = personaKey ?? null;
-    const imageUrl = URL.createObjectURL(imageFile);
-    setPersona(nextPersona);
-    setLastMessage({ imageUrl, context: contextText });
     setStatus('loading');
     setReport(null);
     setErrorMsg('');
@@ -79,8 +73,6 @@ export default function App() {
     } catch (err) {
       setErrorMsg(err.message ?? 'An unexpected error occurred.');
       setStatus('error');
-    } finally {
-      URL.revokeObjectURL(imageUrl);
     }
   }
 
@@ -88,8 +80,6 @@ export default function App() {
     setStatus('idle');
     setReport(null);
     setErrorMsg('');
-    setLastMessage(null);
-    setPersona(null);
     setShowRecentSidebar(false);
   }
 
@@ -117,7 +107,6 @@ export default function App() {
 
   function handleOpenSession(session) {
     setReport(session.report);
-    setPersona(session.personaKey ?? null);
     setErrorMsg('');
     setStatus('success');
   }
@@ -142,10 +131,6 @@ export default function App() {
       />
     );
   }
-
-  // Suppress unused-var lint — kept for potential future use
-  void lastMessage;
-  void PERSONAS;
 
   function handleExport() {
     if (!report) return;
@@ -198,7 +183,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex flex-col">
+    <div className="min-h-screen bg-zinc-50 flex flex-col" aria-busy={status === 'loading'}>
       <header className="sticky top-0 z-10 bg-white/95 border-b border-zinc-200 px-6 py-4 flex items-center justify-between backdrop-blur-sm">
         <span className="text-sm font-bold tracking-tight text-zinc-950">EvalBridge</span>
         <div className="flex items-center gap-2">
@@ -229,9 +214,13 @@ export default function App() {
         </div>
       </header>
 
-      <div ref={responseRef} className="flex-1 w-full max-w-6xl mx-auto px-6 py-10">
+      <main ref={responseRef} className="flex-1 w-full max-w-6xl mx-auto px-6 py-10">
         {status === 'loading' && (
-          <div className="flex flex-col items-center justify-center min-h-[360px] gap-4">
+          <div
+            className="flex flex-col items-center justify-center min-h-[360px] gap-4"
+            role="status"
+            aria-live="polite"
+          >
             <ThinkingDots />
             <p className="text-sm font-medium text-zinc-500 tracking-wide">
               {LOADING_MESSAGES[loadingMessageIndex]}
@@ -240,7 +229,10 @@ export default function App() {
         )}
 
         {status === 'error' && (
-          <div className="max-w-lg mx-auto rounded-xl border border-red-200 bg-red-50 p-6 flex flex-col gap-2">
+          <div
+            className="max-w-lg mx-auto rounded-xl border border-red-200 bg-red-50 p-6 flex flex-col gap-2"
+            role="alert"
+          >
             <p className="text-sm font-bold text-red-700">Analysis failed</p>
             <p className="text-xs text-red-600 font-mono break-all leading-relaxed">{errorMsg}</p>
             <button
@@ -270,7 +262,7 @@ export default function App() {
             )}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }
