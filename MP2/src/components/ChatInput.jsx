@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
@@ -16,8 +16,18 @@ export default function ChatInput({
   const context = isControlled ? controlledContext : internalContext;
   const setContext = isControlled ? onContextChange : setInternalContext;
 
+  function clearImagePreview() {
+    setImage((prev) => {
+      if (prev?.previewUrl) {
+        URL.revokeObjectURL(prev.previewUrl);
+      }
+      return null;
+    });
+  }
+
   function handleFile(file) {
     if (!file || !ACCEPTED_TYPES.includes(file.type)) return;
+    clearImagePreview();
     setImage({ file, previewUrl: URL.createObjectURL(file) });
   }
 
@@ -29,9 +39,15 @@ export default function ChatInput({
   function handleSubmit() {
     if (!image || isLoading) return;
     onAnalyze(image.file, context);
-    setImage(null);
+    clearImagePreview();
     setContext('');
   }
+
+  useEffect(() => () => {
+    if (image?.previewUrl) {
+      URL.revokeObjectURL(image.previewUrl);
+    }
+  }, [image?.previewUrl]);
 
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -48,7 +64,7 @@ export default function ChatInput({
             <img src={image.previewUrl} alt="Attached" className="h-8 w-8 object-cover rounded" />
             <span className="text-xs text-gray-600 max-w-[140px] truncate">{image.file.name}</span>
             <button
-              onClick={() => setImage(null)}
+              onClick={clearImagePreview}
               className="w-5 h-5 flex items-center justify-center rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors"
               aria-label="Remove image"
             >

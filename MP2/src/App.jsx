@@ -1,32 +1,86 @@
 import { useEffect, useRef, useState } from 'react';
 import LandingPage from './components/LandingPage.jsx';
 import Report from './components/Report.jsx';
-import { analyzeInterface } from './lib/api.js';
+import SessionHistory from './components/SessionHistory.jsx';
+import { analyzeInterface, createThumbnailDataUrl } from './lib/api.js';
 import { PERSONAS } from './lib/personas.js';
 import './App.css';
+
+const STORAGE_KEY = 'evalbridge.sessions.v1';
+const MAX_SESSIONS = 25;
+const LOADING_MESSAGES = [
+  'Preparing screenshot for analysis',
+  'Analyzing interface structure and usability',
+  'Checking findings for consistency',
+  'Preparing your report view',
+];
+
+function loadSessions() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
 export default function App() {
   const [status, setStatus] = useState('idle');
   const [report, setReport] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [lastMessage, setLastMessage] = useState(null);
-  const [persona, setPersona] = useState(null);
+  const [, setPersona] = useState(null);
+  const [sessions, setSessions] = useState(() => loadSessions().slice(0, MAX_SESSIONS));
+  const [showRecentSidebar, setShowRecentSidebar] = useState(false);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const responseRef = useRef(null);
 
   async function handleAnalyze(imageFile, contextText, personaKey) {
-    setPersona(personaKey ?? null);
-    setLastMessage({ imageUrl: URL.createObjectURL(imageFile), context: contextText });
+    const nextPersona = personaKey ?? null;
+    const imageUrl = URL.createObjectURL(imageFile);
+    setPersona(nextPersona);
+    setLastMessage({ imageUrl, context: contextText });
     setStatus('loading');
     setReport(null);
     setErrorMsg('');
+    setLoadingMessageIndex(0);
 
     try {
       const result = await analyzeInterface(imageFile, contextText, personaKey);
+      const sessionId = crypto.randomUUID();
+      const session = {
+        id: sessionId,
+        createdAt: new Date().toISOString(),
+        personaKey: nextPersona,
+        context: contextText ?? '',
+        report: result,
+        summary: result.summary,
+        screenshotName: imageFile.name ?? '',
+        thumbnailDataUrl: null,
+      };
+
+      setSessions((prev) => [session, ...prev].slice(0, MAX_SESSIONS));
       setReport(result);
       setStatus('success');
+
+      createThumbnailDataUrl(imageFile)
+        .then((thumbnailDataUrl) => {
+          setSessions((prev) =>
+            prev.map((existing) =>
+              existing.id === sessionId ? { ...existing, thumbnailDataUrl } : existing
+            )
+          );
+        })
+        .catch(() => {
+          // keep session entry without thumbnail if generation fails
+        });
     } catch (err) {
       setErrorMsg(err.message ?? 'An unexpected error occurred.');
       setStatus('error');
+    } finally {
+      URL.revokeObjectURL(imageUrl);
     }
   }
 
@@ -36,6 +90,7 @@ export default function App() {
     setErrorMsg('');
     setLastMessage(null);
     setPersona(null);
+    setShowRecentSidebar(false);
   }
 
   useEffect(() => {
@@ -44,13 +99,52 @@ export default function App() {
     }
   }, [status]);
 
+  useEffect(() => {
+    if (status !== 'loading') return undefined;
+    const intervalId = window.setInterval(() => {
+      setLoadingMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 1400);
+    return () => window.clearInterval(intervalId);
+  }, [status]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions.slice(0, MAX_SESSIONS)));
+    } catch {
+      // ignore persistence failures, app remains usable in-memory
+    }
+  }, [sessions]);
+
+  function handleOpenSession(session) {
+    setReport(session.report);
+    setPersona(session.personaKey ?? null);
+    setErrorMsg('');
+    setStatus('success');
+  }
+
+  function handleDeleteSession(sessionId) {
+    setSessions((prev) => prev.filter((session) => session.id !== sessionId));
+  }
+
+  function handleClearHistory() {
+    setSessions([]);
+  }
+
   if (status === 'idle') {
-    return <LandingPage onAnalyze={handleAnalyze} isLoading={false} />;
+    return (
+      <LandingPage
+        onAnalyze={handleAnalyze}
+        isLoading={false}
+        sessions={sessions}
+        onOpenSession={handleOpenSession}
+        onDeleteSession={handleDeleteSession}
+        onClearHistory={handleClearHistory}
+      />
+    );
   }
 
   // Suppress unused-var lint — kept for potential future use
   void lastMessage;
-  void persona;
   void PERSONAS;
 
   function handleExport() {
@@ -104,50 +198,78 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="sticky top-0 z-10 bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
-        <span className="text-sm font-semibold text-gray-900">EvalBridge</span>
+    <div className="min-h-screen bg-zinc-50 flex flex-col">
+      <header className="sticky top-0 z-10 bg-white/95 border-b border-zinc-200 px-6 py-4 flex items-center justify-between backdrop-blur-sm">
+        <span className="text-sm font-bold tracking-tight text-zinc-950">EvalBridge</span>
         <div className="flex items-center gap-2">
           {status === 'success' && report && (
             <button
               onClick={handleExport}
-              className="inline-flex items-center gap-1.5 text-xs font-medium border border-gray-200 bg-white text-gray-700 rounded-lg px-3 py-1.5 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-zinc-300 bg-white text-zinc-700 rounded-lg px-3 py-1.5 hover:border-zinc-950 hover:text-zinc-950 transition-all cursor-pointer"
             >
               <DownloadIcon />
-              Export report
+              Export
+            </button>
+          )}
+          {status === 'success' && sessions.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowRecentSidebar((v) => !v)}
+              className="text-xs font-semibold border border-zinc-300 bg-white text-zinc-700 rounded-lg px-3 py-1.5 hover:border-zinc-950 hover:text-zinc-950 transition-all cursor-pointer"
+            >
+              {showRecentSidebar ? 'Hide recent analyses' : 'Show recent analyses'}
             </button>
           )}
           <button
             onClick={handleNewAnalysis}
-            className="text-xs font-medium bg-indigo-600 text-white rounded-lg px-3 py-1.5 hover:bg-indigo-500 transition-colors"
+            className="text-xs font-semibold bg-zinc-950 text-white rounded-lg px-3 py-1.5 hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             + New analysis
           </button>
         </div>
       </header>
 
-      <div ref={responseRef} className="flex-1 w-full max-w-6xl mx-auto px-4 py-8">
+      <div ref={responseRef} className="flex-1 w-full max-w-6xl mx-auto px-6 py-10">
         {status === 'loading' && (
           <div className="flex flex-col items-center justify-center min-h-[360px] gap-4">
             <ThinkingDots />
-            <p className="text-sm text-gray-400">Analyzing interface…</p>
+            <p className="text-sm font-medium text-zinc-500 tracking-wide">
+              {LOADING_MESSAGES[loadingMessageIndex]}
+            </p>
           </div>
         )}
 
         {status === 'error' && (
-          <div className="max-w-lg mx-auto rounded-xl border border-red-200 bg-red-50 p-5 flex flex-col gap-2">
-            <p className="text-sm font-semibold text-red-800">Analysis failed</p>
-            <p className="text-sm text-red-700 font-mono break-all leading-relaxed">{errorMsg}</p>
+          <div className="max-w-lg mx-auto rounded-xl border border-red-200 bg-red-50 p-6 flex flex-col gap-2">
+            <p className="text-sm font-bold text-red-700">Analysis failed</p>
+            <p className="text-xs text-red-600 font-mono break-all leading-relaxed">{errorMsg}</p>
             <button
               onClick={handleNewAnalysis}
-              className="mt-1 self-start text-xs font-medium text-red-700 underline underline-offset-2 hover:text-red-900 transition-colors"
+              className="mt-2 self-start text-xs font-semibold text-red-700 underline underline-offset-2 hover:text-red-900 transition-colors cursor-pointer"
             >
               Try again
             </button>
           </div>
         )}
 
-        {status === 'success' && report && <Report report={report} />}
+        {status === 'success' && report && (
+          <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
+            <div className="flex-1 min-w-0">
+              <Report report={report} />
+            </div>
+            {showRecentSidebar && (
+              <aside className="lg:w-80 lg:sticky lg:top-24">
+                <SessionHistory
+                  sessions={sessions}
+                  onOpen={handleOpenSession}
+                  onDelete={handleDeleteSession}
+                  onClear={handleClearHistory}
+                  compact
+                />
+              </aside>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -155,20 +277,20 @@ export default function App() {
 
 function DownloadIcon() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 3v13m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M4 19h16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 3v13m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 19h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
 
 function ThinkingDots() {
   return (
-    <div className="flex gap-1 items-center">
+    <div className="flex gap-1.5 items-center">
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+          className="w-1.5 h-1.5 rounded-full bg-zinc-950 animate-bounce"
           style={{ animationDelay: `${i * 0.15}s` }}
         />
       ))}

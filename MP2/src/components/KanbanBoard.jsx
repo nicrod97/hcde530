@@ -5,16 +5,16 @@ const COLUMNS = [
     id: 'fix-now',
     label: 'Fix now',
     accent: 'border-red-400',
-    badge: 'bg-red-100 text-red-700',
-    header: 'text-red-700',
+    badge: 'bg-red-50 text-red-700',
+    header: 'text-zinc-950',
     filter: (f) => f.severity === 'critical' || (f.severity === 'major' && f.effort === 'low'),
   },
   {
     id: 'fix-soon',
     label: 'Fix soon',
     accent: 'border-amber-400',
-    badge: 'bg-amber-100 text-amber-700',
-    header: 'text-amber-700',
+    badge: 'bg-amber-50 text-amber-800',
+    header: 'text-zinc-950',
     filter: (f) =>
       (f.severity === 'major' && (f.effort === 'medium' || f.effort === 'high')) ||
       f.severity === 'minor',
@@ -22,28 +22,28 @@ const COLUMNS = [
   {
     id: 'backlog',
     label: 'Backlog',
-    accent: 'border-gray-300',
-    badge: 'bg-gray-100 text-gray-600',
-    header: 'text-gray-600',
+    accent: 'border-zinc-300',
+    badge: 'bg-zinc-100 text-zinc-600',
+    header: 'text-zinc-950',
     filter: (f) => f.severity === 'cosmetic',
   },
 ];
 
 export default function KanbanBoard({ findings }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {COLUMNS.map(({ id, label, accent, badge, header, filter }) => {
         const cards = findings.filter(filter);
         return (
           <div key={id} className={`flex flex-col gap-3 border-t-2 pt-4 ${accent}`}>
-            <div className="flex items-center gap-2">
-              <span className={`text-sm font-semibold ${header}`}>{label}</span>
-              <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${badge}`}>
+            <div className="flex items-center gap-2.5 pb-1">
+              <span className={`text-sm font-bold tracking-tight ${header}`}>{label}</span>
+              <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${badge}`}>
                 {cards.length}
               </span>
             </div>
             {cards.length === 0 ? (
-              <p className="text-xs text-gray-400 italic">No findings</p>
+              <p className="text-xs text-zinc-400 font-mono">— no findings</p>
             ) : (
               cards.map((finding) => (
                 <FindingCard key={finding.id} finding={finding} />

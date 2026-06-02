@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
@@ -8,8 +8,18 @@ export default function Sidebar({ onAnalyze, isLoading }) {
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
 
+  function clearImagePreview() {
+    setImage((prev) => {
+      if (prev?.previewUrl) {
+        URL.revokeObjectURL(prev.previewUrl);
+      }
+      return null;
+    });
+  }
+
   function handleFile(file) {
     if (!file || !ACCEPTED_TYPES.includes(file.type)) return;
+    clearImagePreview();
     const previewUrl = URL.createObjectURL(file);
     setImage({ file, previewUrl });
   }
@@ -40,7 +50,14 @@ export default function Sidebar({ onAnalyze, isLoading }) {
   function handleSubmit() {
     if (!image || isLoading) return;
     onAnalyze(image.file, context);
+    clearImagePreview();
   }
+
+  useEffect(() => () => {
+    if (image?.previewUrl) {
+      URL.revokeObjectURL(image.previewUrl);
+    }
+  }, [image?.previewUrl]);
 
   return (
     <aside className="w-full md:w-[280px] md:min-w-[280px] bg-white border-r border-gray-200 flex flex-col p-5 gap-5 md:h-screen md:sticky md:top-0 md:overflow-y-auto">

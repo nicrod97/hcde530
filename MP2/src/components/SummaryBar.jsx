@@ -1,56 +1,40 @@
+/* Severity label colors verified WCAG AA on white (≥4.5:1) */
 const METRICS = [
-  {
-    key: 'critical',
-    label: 'Critical',
-    bg: 'bg-red-50',
-    border: 'border-red-200',
-    count: 'text-red-700',
-    label_color: 'text-red-500',
-  },
-  {
-    key: 'major',
-    label: 'Major',
-    bg: 'bg-amber-50',
-    border: 'border-amber-200',
-    count: 'text-amber-700',
-    label_color: 'text-amber-500',
-  },
-  {
-    key: 'minor',
-    label: 'Minor',
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
-    count: 'text-blue-700',
-    label_color: 'text-blue-500',
-  },
-  {
-    key: 'cosmetic',
-    label: 'Cosmetic',
-    bg: 'bg-gray-50',
-    border: 'border-gray-200',
-    count: 'text-gray-700',
-    label_color: 'text-gray-500',
-  },
+  { key: 'critical', dot: 'bg-red-500',  label: 'Critical', text: 'text-red-700'   },
+  { key: 'major',    dot: 'bg-amber-500', label: 'Major',    text: 'text-amber-800' },
+  { key: 'minor',    dot: 'bg-blue-500',  label: 'Minor',    text: 'text-blue-700'  },
+  { key: 'cosmetic', dot: 'bg-zinc-400',  label: 'Cosmetic', text: 'text-zinc-600'  },
 ];
 
 export default function SummaryBar({ summary }) {
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-baseline gap-2">
-        <h2 className="text-lg font-semibold text-gray-900">Report</h2>
-        <span className="text-sm text-gray-400">{summary.total} finding{summary.total !== 1 ? 's' : ''}</span>
+    <div className="flex flex-col gap-5">
+
+      <div>
+        <div className="text-4xl font-black tracking-tighter text-zinc-950 tabular-nums leading-none">
+          {summary.total}
+        </div>
+        <p className="text-xs font-medium text-zinc-500 mt-1.5">
+          finding{summary.total !== 1 ? 's' : ''} found
+        </p>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {METRICS.map(({ key, label, bg, border, count, label_color }) => (
-          <div
-            key={key}
-            className={`rounded-lg border ${border} ${bg} px-4 py-3 flex flex-col gap-0.5`}
-          >
-            <span className={`text-2xl font-bold tabular-nums ${count}`}>{summary[key] ?? 0}</span>
-            <span className={`text-xs font-medium ${label_color}`}>{label}</span>
+
+      <div className="border-t border-zinc-200" />
+
+      <div className="flex flex-col gap-3">
+        {METRICS.map(({ key, dot, label, text }) => (
+          <div key={key} className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${dot}`} />
+              <span className={`text-sm font-medium ${text}`}>{label}</span>
+            </div>
+            <span className="text-sm font-bold tabular-nums text-zinc-950">
+              {summary[key] ?? 0}
+            </span>
           </div>
         ))}
       </div>
+
     </div>
   );
 }
