@@ -1,16 +1,27 @@
-# React + Vite
+# EvalBridge (Vite + Vercel API Route)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+EvalBridge calls Anthropic through a serverless endpoint at `api/analyze.js`.
+The browser does not send the Anthropic key directly.
 
-Currently, two official plugins are available:
+## Environment Variables
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Vercel (required)
 
-## React Compiler
+Set this in your Vercel project settings:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `ANTHROPIC_API_KEY=<your key>`
 
-## Expanding the ESLint configuration
+Apply it to at least Production (and Preview if needed), then redeploy.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Local development
+
+For local `npm run dev`, make sure your environment provides:
+
+- `ANTHROPIC_API_KEY=<your key>`
+
+You can place it in `.env` or `.env.local` in the `MP2` directory.
+
+## Notes
+
+- `VITE_ANTHROPIC_API_KEY` is no longer required for deployed usage.
+- Client-side image preprocessing is still used; only the model call moved server-side.

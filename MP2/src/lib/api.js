@@ -1,4 +1,3 @@
-import { buildSystemPrompt } from './personas.js';
 import { z } from 'zod';
 
 const MAX_PX = 3000;
@@ -308,56 +307,27 @@ export async function createThumbnailDataUrl(imageFile) {
  * @returns {Promise<object>} parsed report
  */
 export async function analyzeInterface(imageFile, contextText = '', personaKey = null) {
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error(
-      'Missing VITE_ANTHROPIC_API_KEY. Add it to your .env file and restart the dev server.'
-    );
-  }
-
   const { base64: imageBase64, mediaType: rawMediaType } = await fileToBase64(imageFile);
   const imageMediaType = normaliseMediaType(rawMediaType);
 
-  const userContent = [
-    {
-      type: 'image',
-      source: {
-        type: 'base64',
-        media_type: imageMediaType,
-        data: imageBase64,
-      },
-    },
-    {
-      type: 'text',
-      text: contextText.trim()
-        ? `Context: ${contextText.trim()}\n\nAnalyze this interface and return the evaluation JSON.`
-        : 'Analyze this interface and return the evaluation JSON.',
-    },
-  ];
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const response = await fetch('/api/analyze', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-beta': 'interleaved-thinking-2025-05-14',
-      'anthropic-dangerous-direct-browser-access': 'true',
     },
     body: JSON.stringify({
-      model: 'claude-opus-4-5',
-      max_tokens: 3000,
-      system: buildSystemPrompt(personaKey),
-      messages: [{ role: 'user', content: userContent }],
+      imageBase64,
+      imageMediaType,
+      contextText,
+      personaKey,
     }),
   });
 
   if (!response.ok) {
-    const errorBody = await response.text();
     let detail = `HTTP ${response.status}`;
     try {
-      const parsed = JSON.parse(errorBody);
-      detail = parsed?.error?.message ?? detail;
+      const parsed = await response.json();
+      detail = parsed?.error ?? detail;
     } catch {
       // leave detail as-is
     }
