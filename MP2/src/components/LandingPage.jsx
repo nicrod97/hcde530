@@ -66,10 +66,10 @@ export default function LandingPage({
         {/* Wordmark */}
         <div>
           <h1 className="text-[52px] font-black tracking-tighter text-[var(--color-text-primary)] leading-none">
-            EvalBridge
+            Check your Work!
           </h1>
           <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[var(--color-text-muted)] mt-3">
-            Heuristic &amp; accessibility evaluator
+            Accessibility &amp; heuristic analysis tool
           </p>
         </div>
 
