@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import SummaryBar from './SummaryBar.jsx';
 import KanbanBoard from './KanbanBoard.jsx';
 import FindingCard from './FindingCard.jsx';
@@ -10,6 +10,7 @@ export default function Report({
 }) {
   const { summary, findings, persona_take, persona, _validationWarnings } = report;
   const [showBrowseReport, setShowBrowseReport] = useState(false);
+  const browseReportSectionRef = useRef(null);
   const [selectedSeverities, setSelectedSeverities] = useState(new Set());
   const [selectedCategories, setSelectedCategories] = useState(new Set());
   const [selectedEfforts, setSelectedEfforts] = useState(new Set());
@@ -59,6 +60,13 @@ export default function Report({
     setSearchText('');
   }
 
+  function handleRequestBrowseReport() {
+    setShowBrowseReport(true);
+    window.requestAnimationFrame(() => {
+      browseReportSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
   return (
     <main className="flex flex-col gap-8" aria-label="Evaluation report">
       <section className="bg-[#eef2ff] border border-[#c9d6ff] rounded-2xl px-6 py-4 flex flex-col gap-2 shadow-[0_2px_0_0_#dbe4ff]" aria-labelledby="confidence-note-heading">
@@ -103,10 +111,15 @@ export default function Report({
       {/* Sidebar layout: numerical summary left, kanban right */}
       <GuidedReview
         report={report}
-        onRequestBrowseReport={() => setShowBrowseReport(true)}
+        onRequestBrowseReport={handleRequestBrowseReport}
       />
 
-      <section className="flex flex-col gap-4" aria-labelledby="browse-report-heading">
+      <section
+        ref={browseReportSectionRef}
+        className="flex flex-col gap-4"
+        style={{ scrollMarginTop: '6rem' }}
+        aria-labelledby="browse-report-heading"
+      >
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#d8e9c8] pb-3">
           <div>
             <h2 id="browse-report-heading" className="text-base font-bold text-[var(--color-text-primary)] tracking-tight">
@@ -119,7 +132,7 @@ export default function Report({
           {!showBrowseReport ? (
             <button
               type="button"
-              onClick={() => setShowBrowseReport(true)}
+              onClick={handleRequestBrowseReport}
               className="text-xs font-semibold rounded-xl border border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] px-3 py-1.5 hover:border-[#f97316] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer shadow-[0_1px_0_0_#deedd0]"
             >
               Show full report
