@@ -2,6 +2,26 @@
 
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Nunito', 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* semantic contrast tokens */
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #2f2f2f;
+  --color-text-muted: #404040;
+
+  --color-surface-base: #f5fbef;
+  --color-surface-soft: #f7fdee;
+  --color-surface-card: #ffffff;
+  --color-surface-border: #d8e9c8;
+
+  /* distinct non-Duolingo CTA system */
+  --color-cta-bg: #cc4e10;
+  --color-cta-hover: #9a3412;
+  --color-cta-press: #7c2d12;
+  --color-cta-shadow: #7c2d12;
+  --color-cta-text: #ffffff;
+
+  --color-focus-accent: #f97316;
 }
 
 html {
@@ -9,6 +29,17 @@ html {
 }
 
 body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-surface-base);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CATEGORY_TAG, EFFORT_TAG, FALLBACK_TAG, SEVERITY_TAG } from '../lib/tagStyles.js';
 
 const HEURISTICS = {
   H1: 'Visibility of System Status',
@@ -20,26 +21,6 @@ const SEVERITY_STRIPE = {
   cosmetic: 'bg-zinc-300',
 };
 
-/* Solid badge — white text on colored bg, all verified WCAG AA */
-const SEVERITY_BADGE = {
-  critical: 'bg-red-600 text-white',
-  major:    'bg-amber-600 text-white',
-  minor:    'bg-blue-600 text-white',
-  cosmetic: 'bg-zinc-500 text-white',
-};
-
-const CATEGORY_TAG = {
-  heuristic:      'bg-violet-50 text-violet-700',
-  accessibility:  'bg-teal-50 text-teal-700',
-  'best-practice':'bg-blue-50 text-blue-700',
-};
-
-const EFFORT_TAG = {
-  low:    'bg-emerald-50 text-emerald-700',
-  medium: 'bg-yellow-50 text-yellow-800',
-  high:   'bg-rose-50 text-rose-700',
-};
-
 const REC_BORDER = {
   critical: 'border-red-300',
   major:    'border-amber-300',
@@ -52,8 +33,8 @@ export default function FindingCard({ finding }) {
   const [expanded, setExpanded] = useState(false);
 
   const stripeColor  = SEVERITY_STRIPE[severity]  ?? SEVERITY_STRIPE.cosmetic;
-  const severityBadge = SEVERITY_BADGE[severity]  ?? SEVERITY_BADGE.cosmetic;
-  const categoryTag  = CATEGORY_TAG[category]     ?? 'bg-zinc-100 text-zinc-500';
+  const severityBadge = SEVERITY_TAG[severity]  ?? SEVERITY_TAG.cosmetic;
+  const categoryTag  = CATEGORY_TAG[category]     ?? FALLBACK_TAG;
   const effortTag    = EFFORT_TAG[effort]          ?? EFFORT_TAG.medium;
   const recBorder    = REC_BORDER[severity]        ?? REC_BORDER.cosmetic;
 
@@ -63,7 +44,7 @@ export default function FindingCard({ finding }) {
 
   return (
     <article
-      className="relative bg-white rounded-xl overflow-hidden flex flex-col border border-zinc-200 hover:border-zinc-300 transition-colors"
+      className="relative bg-white rounded-2xl overflow-hidden flex flex-col border border-[#d8e9c8] hover:border-[#b8d99a] transition-colors shadow-[0_3px_0_0_#deedd0]"
       aria-labelledby={titleId}
     >
 
@@ -81,14 +62,14 @@ export default function FindingCard({ finding }) {
         </div>
 
         {/* Title — dominant */}
-        <h3 id={titleId} className="font-bold text-zinc-950 text-[14px] leading-snug">
+        <h3 id={titleId} className="font-bold text-[var(--color-text-primary)] text-[14px] leading-snug">
           {title}
         </h3>
 
         {/* Heuristic — violet pill */}
         {heuristicName && (
           <div>
-            <Pill className="bg-violet-50 text-violet-700">
+            <Pill className={CATEGORY_TAG.heuristic}>
               {heuristic} · {heuristicName}
             </Pill>
           </div>
@@ -100,7 +81,7 @@ export default function FindingCard({ finding }) {
             <Pill className={categoryTag}>{category}</Pill>
           )}
           {wcag && (
-            <Pill className="bg-zinc-100 text-zinc-500">{wcag}</Pill>
+            <Pill className="border border-[#d8e9c8] bg-[#f1f7e9] text-[var(--color-text-muted)]">{wcag}</Pill>
           )}
           <Pill className={effortTag}>effort: {effort}</Pill>
         </div>
@@ -113,7 +94,7 @@ export default function FindingCard({ finding }) {
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
         aria-controls={detailsId}
-        className="pl-5 pr-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 border-t border-zinc-200 flex items-center justify-between text-[11px] font-bold text-zinc-500 hover:text-zinc-950 transition-all cursor-pointer w-full"
+        className="pl-5 pr-4 py-2.5 bg-[#f4fbe9] hover:bg-[#e9f6dd] border-t border-[#d8e9c8] flex items-center justify-between text-[11px] font-bold text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-all cursor-pointer w-full"
       >
         <span>{expanded ? 'Hide details' : 'Show details'}</span>
         <ChevronIcon expanded={expanded} />
@@ -122,14 +103,14 @@ export default function FindingCard({ finding }) {
       {/* Expanded detail section */}
       <div id={detailsId} hidden={!expanded}>
         {expanded && (
-          <section className="pl-5 pr-5 pt-1 pb-5 flex flex-col gap-4 border-t border-zinc-100" aria-label={`Details for ${title}`}>
-            <p className="text-sm text-zinc-600 leading-relaxed pt-3">{description}</p>
+          <section className="pl-5 pr-5 pt-1 pb-5 flex flex-col gap-4 border-t border-[#e2efd7]" aria-label={`Details for ${title}`}>
+            <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed pt-3">{description}</p>
 
-            <section className={`pl-4 py-3 border-l-2 ${recBorder} bg-zinc-50 rounded-r-lg`} aria-label="Recommendation">
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.15em] mb-2">
+            <section className={`pl-4 py-3 border-l-2 ${recBorder} bg-[#f7fdee] rounded-r-xl`} aria-label="Recommendation">
+              <p className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-[0.15em] mb-2">
                 Recommendation
               </p>
-              <p className="text-sm text-zinc-700 leading-relaxed">{recommendation}</p>
+              <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{recommendation}</p>
             </section>
           </section>
         )}
@@ -141,7 +122,7 @@ export default function FindingCard({ finding }) {
 
 function Pill({ children, className }) {
   return (
-    <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold ${className}`}>
+    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${className}`}>
       {children}
     </span>
   );

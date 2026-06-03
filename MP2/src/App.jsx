@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import LandingPage from './components/LandingPage.jsx';
 import Report from './components/Report.jsx';
 import SessionHistory from './components/SessionHistory.jsx';
+import SlideOverPanel from './components/SlideOverPanel.jsx';
 import { analyzeInterface, createThumbnailDataUrl } from './lib/api.js';
 import './App.css';
 
@@ -14,12 +15,22 @@ const LOADING_MESSAGES = [
   'Preparing your report view',
 ];
 
+function normalizeSession(session) {
+  if (!session || typeof session !== 'object') return null;
+  return {
+    ...session,
+  };
+}
+
 function loadSessions() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map(normalizeSession)
+      .filter(Boolean);
   } catch {
     return [];
   }
@@ -28,11 +39,13 @@ function loadSessions() {
 export default function App() {
   const [status, setStatus] = useState('idle');
   const [report, setReport] = useState(null);
+  const [activeSessionId, setActiveSessionId] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [sessions, setSessions] = useState(() => loadSessions().slice(0, MAX_SESSIONS));
   const [showRecentSidebar, setShowRecentSidebar] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const responseRef = useRef(null);
+  const recentButtonRef = useRef(null);
 
   async function handleAnalyze(imageFile, contextText, personaKey) {
     const nextPersona = personaKey ?? null;
@@ -56,6 +69,7 @@ export default function App() {
       };
 
       setSessions((prev) => [session, ...prev].slice(0, MAX_SESSIONS));
+      setActiveSessionId(sessionId);
       setReport(result);
       setStatus('success');
 
@@ -79,6 +93,7 @@ export default function App() {
   function handleNewAnalysis() {
     setStatus('idle');
     setReport(null);
+    setActiveSessionId(null);
     setErrorMsg('');
     setShowRecentSidebar(false);
   }
@@ -107,16 +122,28 @@ export default function App() {
 
   function handleOpenSession(session) {
     setReport(session.report);
+    setActiveSessionId(session.id);
     setErrorMsg('');
     setStatus('success');
   }
 
   function handleDeleteSession(sessionId) {
     setSessions((prev) => prev.filter((session) => session.id !== sessionId));
+    if (activeSessionId === sessionId) {
+      setActiveSessionId(null);
+    }
   }
 
   function handleClearHistory() {
     setSessions([]);
+    setActiveSessionId(null);
+  }
+
+  function closeRecentPanel() {
+    setShowRecentSidebar(false);
+    window.setTimeout(() => {
+      recentButtonRef.current?.focus();
+    }, 0);
   }
 
   if (status === 'idle') {
@@ -183,14 +210,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex flex-col" aria-busy={status === 'loading'}>
-      <header className="sticky top-0 z-10 bg-white/95 border-b border-zinc-200 px-6 py-4 flex items-center justify-between backdrop-blur-sm">
-        <span className="text-sm font-bold tracking-tight text-zinc-950">EvalBridge</span>
+    <div className="min-h-screen bg-[var(--color-surface-base)] flex flex-col" aria-busy={status === 'loading'}>
+      <header className="sticky top-0 z-10 bg-[#f9fff4]/95 border-b border-[var(--color-surface-border)] px-6 py-4 flex items-center justify-between backdrop-blur-sm">
+        <span className="text-sm font-extrabold tracking-tight text-[var(--color-text-primary)]">EvalBridge</span>
         <div className="flex items-center gap-2">
           {status === 'success' && report && (
             <button
               onClick={handleExport}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-zinc-300 bg-white text-zinc-700 rounded-lg px-3 py-1.5 hover:border-zinc-950 hover:text-zinc-950 transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] rounded-xl px-3 py-1.5 hover:border-[#f97316] hover:text-[var(--color-text-primary)] transition-all cursor-pointer shadow-[0_1px_0_0_#d9ebc9]"
             >
               <DownloadIcon />
               Export
@@ -198,16 +225,19 @@ export default function App() {
           )}
           {status === 'success' && sessions.length > 0 && (
             <button
+              ref={recentButtonRef}
               type="button"
               onClick={() => setShowRecentSidebar((v) => !v)}
-              className="text-xs font-semibold border border-zinc-300 bg-white text-zinc-700 rounded-lg px-3 py-1.5 hover:border-zinc-950 hover:text-zinc-950 transition-all cursor-pointer"
+              aria-expanded={showRecentSidebar}
+              aria-controls="recent-analyses-panel"
+              className="text-xs font-semibold border border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] rounded-xl px-3 py-1.5 hover:border-[#f97316] hover:text-[var(--color-text-primary)] transition-all cursor-pointer shadow-[0_1px_0_0_#d9ebc9]"
             >
               {showRecentSidebar ? 'Hide recent analyses' : 'Show recent analyses'}
             </button>
           )}
           <button
             onClick={handleNewAnalysis}
-            className="text-xs font-semibold bg-zinc-950 text-white rounded-lg px-3 py-1.5 hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="text-xs font-semibold bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] rounded-xl px-3 py-1.5 hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] transition-all cursor-pointer shadow-[0_3px_0_0_var(--color-cta-shadow)]"
           >
             + New analysis
           </button>
@@ -222,7 +252,7 @@ export default function App() {
             aria-live="polite"
           >
             <ThinkingDots />
-            <p className="text-sm font-medium text-zinc-500 tracking-wide">
+            <p className="text-sm font-medium text-[var(--color-text-muted)] tracking-wide">
               {LOADING_MESSAGES[loadingMessageIndex]}
             </p>
           </div>
@@ -230,7 +260,7 @@ export default function App() {
 
         {status === 'error' && (
           <div
-            className="max-w-lg mx-auto rounded-xl border border-red-200 bg-red-50 p-6 flex flex-col gap-2"
+            className="max-w-lg mx-auto rounded-2xl border border-red-200 bg-red-50/95 p-6 flex flex-col gap-2 shadow-[0_6px_16px_rgba(180,38,38,0.08)]"
             role="alert"
           >
             <p className="text-sm font-bold text-red-700">Analysis failed</p>
@@ -245,24 +275,33 @@ export default function App() {
         )}
 
         {status === 'success' && report && (
-          <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
-            <div className="flex-1 min-w-0">
-              <Report report={report} />
-            </div>
-            {showRecentSidebar && (
-              <aside className="lg:w-80 lg:sticky lg:top-24">
-                <SessionHistory
-                  sessions={sessions}
-                  onOpen={handleOpenSession}
-                  onDelete={handleDeleteSession}
-                  onClear={handleClearHistory}
-                  compact
-                />
-              </aside>
-            )}
+          <div className="flex-1 min-w-0">
+            <Report
+              report={report}
+            />
           </div>
         )}
       </main>
+
+      <SlideOverPanel
+        isOpen={status === 'success' && showRecentSidebar}
+        onClose={closeRecentPanel}
+        title="Recent analyses"
+        labelledById="recent-analyses-title"
+      >
+        <div id="recent-analyses-panel">
+          <SessionHistory
+            sessions={sessions}
+            onOpen={(session) => {
+              handleOpenSession(session);
+              closeRecentPanel();
+            }}
+            onDelete={handleDeleteSession}
+            onClear={handleClearHistory}
+            compact
+          />
+        </div>
+      </SlideOverPanel>
     </div>
   );
 }
@@ -282,7 +321,7 @@ function ThinkingDots() {
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-zinc-950 animate-bounce"
+          className="w-1.5 h-1.5 rounded-full bg-[var(--color-cta-bg)] animate-bounce"
           style={{ animationDelay: `${i * 0.15}s` }}
         />
       ))}

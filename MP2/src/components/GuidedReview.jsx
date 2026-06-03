@@ -1,0 +1,368 @@
+import { useEffect, useRef, useState } from 'react';
+import EducationalOverview from './EducationalOverview.jsx';
+import FindingLessonCard from './FindingLessonCard.jsx';
+import GuidedRecap from './GuidedRecap.jsx';
+
+const STEPS = {
+  OVERVIEW: 'overview',
+  FINDING: 'finding',
+  RECAP: 'recap',
+};
+
+const ANIMATION_MS = 260;
+const SWIPE_DISTANCE_THRESHOLD = 72;
+const SWIPE_VELOCITY_THRESHOLD = 0.45;
+const EDGE_RESISTANCE = 0.35;
+
+export default function GuidedReview({
+  report,
+  onRequestBrowseReport,
+}) {
+  const findings = report?.findings ?? [];
+  const summary = report?.summary ?? { total: 0, critical: 0, major: 0, minor: 0, cosmetic: 0 };
+  const [step, setStep] = useState(STEPS.OVERVIEW);
+  const [findingIndex, setFindingIndex] = useState(0);
+  const [displayIndex, setDisplayIndex] = useState(0);
+  const [navDirection, setNavDirection] = useState('next');
+  const [animPhase, setAnimPhase] = useState('idle');
+  const [targetIndex, setTargetIndex] = useState(null);
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const [isSettlingSwipe, setIsSettlingSwipe] = useState(false);
+  const pointerRef = useRef({
+    id: null,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    startTime: 0,
+    hasExceededDragThreshold: false,
+    cancelledForVerticalScroll: false,
+  });
+
+  const currentFinding = findings[displayIndex] ?? null;
+  const isAnimating = animPhase !== 'idle';
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  function navigateToIndex(nextIndex, direction) {
+    if (nextIndex === findingIndex) return true;
+
+    if (prefersReducedMotion) {
+      setFindingIndex(nextIndex);
+      setDisplayIndex(nextIndex);
+      setNavDirection(direction);
+      setSwipeOffset(0);
+      return true;
+    }
+
+    setNavDirection(direction);
+    setTargetIndex(nextIndex);
+    setAnimPhase('out');
+    return true;
+  }
+
+  function settleSwipeOffset() {
+    if (prefersReducedMotion) {
+      setSwipeOffset(0);
+      setIsSettlingSwipe(false);
+      return;
+    }
+    setIsSettlingSwipe(true);
+    setSwipeOffset(0);
+    window.setTimeout(() => setIsSettlingSwipe(false), 180);
+  }
+
+  function triggerFindingNavigation(direction, source = 'button') {
+    if (step !== STEPS.FINDING || isAnimating) return false;
+
+    if (direction === 'next') {
+      if (findingIndex >= findings.length - 1) {
+        if (source === 'gesture') settleSwipeOffset();
+        return false;
+      }
+      return navigateToIndex(findingIndex + 1, 'next');
+    }
+
+    if (findingIndex <= 0) {
+      if (source === 'gesture') settleSwipeOffset();
+      return false;
+    }
+    return navigateToIndex(findingIndex - 1, 'prev');
+  }
+
+  function handleNext() {
+    if (step === STEPS.OVERVIEW) {
+      if (findings.length === 0) {
+        setStep(STEPS.RECAP);
+        return;
+      }
+      setFindingIndex(0);
+      setDisplayIndex(0);
+      setStep(STEPS.FINDING);
+      return;
+    }
+
+    if (step === STEPS.FINDING) {
+      if (findingIndex >= findings.length - 1) {
+        setStep(STEPS.RECAP);
+      } else {
+        triggerFindingNavigation('next');
+      }
+    }
+  }
+
+  function handlePrevious() {
+    if (step === STEPS.FINDING) {
+      if (findingIndex > 0) {
+        triggerFindingNavigation('prev');
+      } else {
+        setStep(STEPS.OVERVIEW);
+      }
+      return;
+    }
+
+    if (step === STEPS.RECAP) {
+      if (findings.length > 0) {
+        setStep(STEPS.FINDING);
+        const lastIndex = findings.length - 1;
+        setFindingIndex(lastIndex);
+        setDisplayIndex(lastIndex);
+      } else {
+        setStep(STEPS.OVERVIEW);
+      }
+    }
+  }
+
+  function handlePointerDown(event) {
+    if (step !== STEPS.FINDING || isAnimating || prefersReducedMotion || event.button !== 0) return;
+    pointerRef.current = {
+      id: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      startTime: performance.now(),
+      hasExceededDragThreshold: false,
+      cancelledForVerticalScroll: false,
+    };
+    setIsSettlingSwipe(false);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function handlePointerMove(event) {
+    const pointer = pointerRef.current;
+    if (pointer.id !== event.pointerId || step !== STEPS.FINDING || isAnimating || prefersReducedMotion) return;
+
+    const deltaX = event.clientX - pointer.startX;
+    const deltaY = event.clientY - pointer.startY;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+
+    if (!pointer.hasExceededDragThreshold && absX + absY > 8) {
+      pointer.hasExceededDragThreshold = true;
+    }
+
+    if (!pointer.hasExceededDragThreshold) return;
+
+    if (!pointer.cancelledForVerticalScroll && absY > absX && absY > 12) {
+      pointer.cancelledForVerticalScroll = true;
+      setSwipeOffset(0);
+      return;
+    }
+
+    if (pointer.cancelledForVerticalScroll) return;
+
+    let adjustedOffset = deltaX;
+    const atFirst = findingIndex <= 0;
+    const atLast = findingIndex >= findings.length - 1;
+    if ((atFirst && deltaX > 0) || (atLast && deltaX < 0)) {
+      adjustedOffset = deltaX * EDGE_RESISTANCE;
+    }
+
+    pointer.lastX = event.clientX;
+    setSwipeOffset(adjustedOffset);
+  }
+
+  function handlePointerEnd(event) {
+    const pointer = pointerRef.current;
+    if (pointer.id !== event.pointerId || step !== STEPS.FINDING || isAnimating || prefersReducedMotion) return;
+
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+
+    const deltaX = event.clientX - pointer.startX;
+    const elapsed = Math.max(performance.now() - pointer.startTime, 1);
+    const velocity = Math.abs(deltaX / elapsed);
+    const meetsDistance = Math.abs(deltaX) >= SWIPE_DISTANCE_THRESHOLD;
+    const meetsVelocity = velocity >= SWIPE_VELOCITY_THRESHOLD;
+
+    const shouldNavigate = !pointer.cancelledForVerticalScroll && (meetsDistance || meetsVelocity);
+    let didNavigate = false;
+    if (shouldNavigate) {
+      if (deltaX < 0) {
+        didNavigate = triggerFindingNavigation('next', 'gesture');
+      } else {
+        didNavigate = triggerFindingNavigation('prev', 'gesture');
+      }
+    }
+
+    if (!didNavigate) {
+      settleSwipeOffset();
+    } else {
+      setSwipeOffset(0);
+      setIsSettlingSwipe(false);
+    }
+    pointerRef.current = {
+      id: null,
+      startX: 0,
+      startY: 0,
+      lastX: 0,
+      startTime: 0,
+      hasExceededDragThreshold: false,
+      cancelledForVerticalScroll: false,
+    };
+  }
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setPrefersReducedMotion(mediaQuery.matches);
+    apply();
+    mediaQuery.addEventListener('change', apply);
+    return () => mediaQuery.removeEventListener('change', apply);
+  }, []);
+
+  useEffect(() => {
+    if (animPhase !== 'out' || targetIndex === null) return undefined;
+
+    const outTimer = window.setTimeout(() => {
+      setDisplayIndex(targetIndex);
+      setFindingIndex(targetIndex);
+      setAnimPhase('prepare-in');
+    }, ANIMATION_MS);
+
+    return () => window.clearTimeout(outTimer);
+  }, [animPhase, targetIndex]);
+
+  useEffect(() => {
+    if (animPhase !== 'prepare-in') return undefined;
+    const rafId = window.requestAnimationFrame(() => {
+      setAnimPhase('in');
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, [animPhase]);
+
+  useEffect(() => {
+    if (animPhase !== 'in') return undefined;
+
+    const inTimer = window.setTimeout(() => {
+      setAnimPhase('idle');
+      setTargetIndex(null);
+      setSwipeOffset(0);
+    }, ANIMATION_MS);
+
+    return () => window.clearTimeout(inTimer);
+  }, [animPhase]);
+
+  const cardTranslatePercent =
+    animPhase === 'out'
+      ? (navDirection === 'next' ? -100 : 100)
+      : animPhase === 'prepare-in'
+        ? (navDirection === 'next' ? 100 : -100)
+        : 0;
+
+  const cardTransition =
+    prefersReducedMotion
+      ? 'none'
+      :
+    animPhase === 'out' || animPhase === 'in'
+      ? `transform ${ANIMATION_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
+      : isSettlingSwipe
+        ? 'transform 180ms ease-out'
+        : 'none';
+
+  return (
+    <section className="rounded-3xl border border-[#d8e9c8] bg-[#fcfff9] shadow-[0_6px_0_0_#deedd0] p-5 md:p-6 flex flex-col gap-5" aria-labelledby="guided-review-heading">
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#5a49bc]">Guided review</p>
+          <h2 id="guided-review-heading" className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            Learn from the report, step by step
+          </h2>
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            Start with an overview, then review each finding with practical fixes.
+          </p>
+        </div>
+        <span className="text-xs font-semibold text-[var(--color-text-muted)] rounded-full border border-[#d8e9c8] bg-white px-2.5 py-1 shadow-[0_1px_0_0_#deedd0]">
+          {step === STEPS.OVERVIEW && 'Step 1 of 3'}
+          {step === STEPS.FINDING && 'Step 2 of 3'}
+          {step === STEPS.RECAP && 'Step 3 of 3'}
+        </span>
+      </header>
+
+      {step === STEPS.OVERVIEW && (
+        <EducationalOverview summary={summary} findings={findings} />
+      )}
+
+      {step === STEPS.FINDING && currentFinding && (
+        <div
+          className="overflow-hidden [touch-action:pan-y] select-none"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerEnd}
+          onPointerCancel={handlePointerEnd}
+        >
+          <div
+            className="will-change-transform"
+            style={{
+              transform: `translate3d(calc(${cardTranslatePercent}% + ${swipeOffset}px), 0, 0)`,
+              transition: cardTransition,
+            }}
+          >
+            <div className="flex flex-col gap-4">
+              <FindingLessonCard
+                finding={currentFinding}
+                findingIndex={displayIndex}
+                findingTotal={findings.length}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {step === STEPS.RECAP && (
+        <GuidedRecap
+          findings={findings}
+          onRequestBrowseReport={onRequestBrowseReport}
+        />
+      )}
+
+      <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e2efd7] pt-4">
+        <button
+          type="button"
+          onClick={handlePrevious}
+          disabled={step === STEPS.OVERVIEW || isAnimating}
+          className={[
+            'text-sm font-semibold rounded-xl border px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
+            step === STEPS.OVERVIEW || isAnimating
+              ? 'border-[#d8e9c8] text-[#546748] bg-[#eef7e5] cursor-not-allowed'
+              : 'border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] hover:border-[#f97316] hover:text-[var(--color-text-primary)] cursor-pointer',
+          ].join(' ')}
+        >
+          Previous
+        </button>
+
+        <button
+          type="button"
+          onClick={handleNext}
+          disabled={step === STEPS.RECAP || isAnimating}
+          className={[
+            'text-sm font-semibold rounded-xl px-3 py-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
+            step === STEPS.RECAP || isAnimating
+              ? 'bg-[#e7f3d9] text-[#5a6e4f] cursor-not-allowed shadow-none'
+              : 'bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] cursor-pointer shadow-[0_3px_0_0_var(--color-cta-shadow)]',
+          ].join(' ')}
+        >
+          {step === STEPS.OVERVIEW && (findings.length > 0 ? 'Start walkthrough' : 'View recap')}
+          {step === STEPS.FINDING && (findingIndex < findings.length - 1 ? 'Next finding' : 'Finish walkthrough')}
+          {step === STEPS.RECAP && 'Complete'}
+        </button>
+      </footer>
+    </section>
+  );
+}

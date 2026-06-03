@@ -331,6 +331,9 @@ export async function analyzeInterface(imageFile, contextText = '', personaKey =
     } catch {
       // leave detail as-is
     }
+    if (response.status === 404 && detail === 'HTTP 404') {
+      detail = 'API route not found. Run a local API server (for example `vercel dev`) or verify the `/api/analyze` endpoint is available.';
+    }
     throw new Error(detail);
   }
 
