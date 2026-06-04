@@ -63,6 +63,7 @@ Open the local URL shown by Vite (usually `http://localhost:5173`).
 - `npm run build` - build for production
 - `npm run preview` - preview production build locally
 - `npm run lint` - run ESLint
+- `npm run contrast:tokens` - verify core semantic color-token pairs meet WCAG AA contrast expectations
 
 ## Deployment (Vercel)
 

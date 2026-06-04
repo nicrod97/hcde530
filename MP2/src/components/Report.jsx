@@ -87,7 +87,7 @@ export default function Report({
         </aside>
 
         <div className="flex-1 min-w-0 flex flex-col gap-8">
-          <section className="bg-[#eef2ff] border border-[#c9d6ff] rounded-2xl px-6 py-4 flex flex-col gap-2 shadow-[0_2px_0_0_#dbe4ff]" aria-labelledby="confidence-note-heading">
+          <section className="bg-[#eef2ff] border border-[#c9d6ff] rounded-2xl px-6 py-4 flex flex-col gap-2 shadow-[0_2px_0_0_#c9d6ff]" aria-labelledby="confidence-note-heading">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700">
               <span id="confidence-note-heading">
               Confidence note
@@ -108,7 +108,7 @@ export default function Report({
           {/* Persona written summary — card at top */}
           {persona_take && persona_take.trim() && (
             <section
-              className="bg-white rounded-2xl border border-[#d8e9c8] px-6 py-5 flex flex-col gap-2 shadow-[0_3px_0_0_#deedd0]"
+              className="bg-[var(--color-surface-card)] rounded-2xl border border-[var(--color-surface-border)] px-6 py-5 flex flex-col gap-2 shadow-[0_3px_0_0_var(--color-surface-border)]"
               aria-labelledby="persona-perspective-heading"
             >
               {personaLabel && (
@@ -140,7 +140,7 @@ export default function Report({
         style={{ scrollMarginTop: '6rem' }}
         aria-labelledby="browse-report-heading"
       >
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#d8e9c8] pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-surface-border)] pb-3">
           <div>
             <h2 id="browse-report-heading" className="text-lg font-bold text-[var(--color-text-primary)] tracking-tight">
               Browse full report
@@ -161,7 +161,7 @@ export default function Report({
             <button
               type="button"
               onClick={() => setShowBrowseReport(false)}
-              className="text-xs font-semibold rounded-xl border border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] px-3 py-1.5 hover:border-[#f97316] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer shadow-[0_1px_0_0_#deedd0]"
+              className="text-xs font-semibold rounded-xl border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] px-3 py-1.5 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer shadow-[0_1px_0_0_var(--color-surface-border)]"
             >
               Hide full report
             </button>
@@ -202,7 +202,7 @@ export default function Report({
                 <div className="flex flex-col gap-3" aria-live="polite">
                   {filteredFindings.length === 0 ? (
                     <div
-                      className="rounded-2xl border border-[#d8e9c8] bg-white p-6 text-sm text-[var(--color-text-muted)]"
+                      className="rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] p-6 text-sm text-[var(--color-text-muted)]"
                       role="status"
                     >
                       No findings match current filters.

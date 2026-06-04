@@ -88,12 +88,12 @@ export default function LandingPage({
             onDragLeave={() => setDragOver(false)}
             onClick={() => fileInputRef.current?.click()}
             className={[
-              'relative rounded-2xl border cursor-pointer transition-all select-none overflow-hidden shadow-[0_2px_0_0_#deedd0]',
+              'relative rounded-2xl border cursor-pointer transition-all select-none overflow-hidden shadow-[0_2px_0_0_var(--color-surface-border)]',
               dragOver
                 ? 'border-[#f97316] bg-[#fff4ea]'
                 : image
-                ? 'border-[#cfe4b5] bg-white'
-                : 'border-[#cfe4b5] bg-white hover:border-[#f97316]',
+                ? 'border-[var(--color-surface-border)] bg-[var(--color-surface-card)]'
+                : 'border-[var(--color-surface-border)] bg-[var(--color-surface-card)] hover:border-[var(--color-focus-accent)]',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
               image ? 'h-52' : 'h-36',
             ].join(' ')}
@@ -106,7 +106,7 @@ export default function LandingPage({
                   className="absolute inset-0 w-full h-full object-contain p-3"
                 />
                 <div className="absolute inset-0 flex items-end justify-center pb-3 opacity-0 hover:opacity-100 transition-opacity bg-white/90">
-                  <span className="text-xs font-medium text-[var(--color-text-secondary)] bg-white border border-[#cfe4b5] rounded-xl px-3 py-1 shadow-sm">
+                  <span className="text-xs font-medium text-[var(--color-text-secondary)] bg-[var(--color-surface-card)] border border-[var(--color-surface-border)] rounded-xl px-3 py-1 shadow-sm">
                     Replace image
                   </span>
                 </div>
@@ -231,10 +231,10 @@ function PersonaPill({ label, selected, onClick }) {
       aria-checked={selected}
       onClick={onClick}
       className={[
-        'rounded-full px-3 py-1 text-xs font-semibold transition-colors cursor-pointer border shadow-[0_1px_0_0_#deedd0]',
+        'rounded-full px-3 py-1 text-xs font-semibold transition-colors cursor-pointer border shadow-[0_1px_0_0_var(--color-surface-border)]',
         selected
           ? 'bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] border-[var(--color-cta-bg)]'
-          : 'bg-white text-[var(--color-text-muted)] border-[#cfe4b5] hover:border-[#f97316] hover:text-[var(--color-text-primary)]',
+          : 'bg-[var(--color-surface-card)] text-[var(--color-text-muted)] border-[var(--color-surface-border)] hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
       ].join(' ')}
     >

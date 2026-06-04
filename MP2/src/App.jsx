@@ -4,7 +4,6 @@ import Report from './components/Report.jsx';
 import SessionHistory from './components/SessionHistory.jsx';
 import SlideOverPanel from './components/SlideOverPanel.jsx';
 import { analyzeInterface, createThumbnailDataUrl } from './lib/api.js';
-import './App.css';
 
 const STORAGE_KEY = 'evalbridge.sessions.v1';
 const MAX_SESSIONS = 25;
@@ -229,12 +228,15 @@ export default function App() {
           <title>CYW Report</title>
           <style>
             :root {
-              --color-surface-base: #f9fff4;
+              --color-surface-base: #f5fbef;
+              --color-surface-soft: #f7fdee;
+              --color-surface-card: #ffffff;
               --color-surface-border: #d8e9c8;
               --color-text-primary: #1a1a1a;
               --color-text-secondary: #2f2f2f;
               --color-text-muted: #404040;
-              --color-cta-bg: #f97316;
+              --color-cta-bg: #cc4e10;
+              --color-cta-shadow: #7c2d12;
               --color-cta-text: #ffffff;
             }
             * { box-sizing: border-box; }
@@ -277,11 +279,11 @@ export default function App() {
               font-size: 13px;
             }
             .panel {
-              background: #ffffff;
+              background: var(--color-surface-card);
               border: 1px solid var(--color-surface-border);
               border-radius: 18px;
               padding: 18px 20px;
-              box-shadow: 0 3px 0 0 #deedd0;
+              box-shadow: 0 3px 0 0 var(--color-surface-border);
             }
             .summary-grid {
               display: grid;
@@ -293,7 +295,7 @@ export default function App() {
               border: 1px solid var(--color-surface-border);
               border-radius: 12px;
               padding: 10px 12px;
-              background: #fcfff9;
+              background: var(--color-surface-soft);
             }
             .summary-label {
               margin: 0 0 4px;
@@ -319,7 +321,7 @@ export default function App() {
             .finding-item {
               border: 1px solid var(--color-surface-border);
               border-radius: 12px;
-              background: #fcfff9;
+              background: var(--color-surface-soft);
               padding: 10px 12px;
             }
             .finding-panel {
@@ -366,7 +368,7 @@ export default function App() {
             @media print {
               body {
                 padding: 0;
-                background: #ffffff;
+                background: var(--color-surface-card);
               }
               .container {
                 max-width: none;
@@ -446,7 +448,7 @@ export default function App() {
           {status === 'success' && report && (
             <button
               onClick={handleExport}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] rounded-xl px-3 py-1.5 hover:border-[#f97316] hover:text-[var(--color-text-primary)] transition-all cursor-pointer shadow-[0_1px_0_0_#d9ebc9]"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] rounded-xl px-3 py-1.5 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-all cursor-pointer shadow-[0_1px_0_0_var(--color-surface-border)]"
             >
               <DownloadIcon />
               Export
@@ -459,7 +461,7 @@ export default function App() {
               onClick={() => setShowRecentSidebar((v) => !v)}
               aria-expanded={showRecentSidebar}
               aria-controls="recent-analyses-panel"
-              className="text-xs font-semibold border border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] rounded-xl px-3 py-1.5 hover:border-[#f97316] hover:text-[var(--color-text-primary)] transition-all cursor-pointer shadow-[0_1px_0_0_#d9ebc9]"
+              className="text-xs font-semibold border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] rounded-xl px-3 py-1.5 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-all cursor-pointer shadow-[0_1px_0_0_var(--color-surface-border)]"
             >
               {showRecentSidebar ? 'Hide recent analyses' : 'Show recent analyses'}
             </button>

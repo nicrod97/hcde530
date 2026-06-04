@@ -303,7 +303,7 @@ export default function GuidedReview({
   return (
     <section
       ref={guidedReviewRef}
-      className="rounded-3xl border border-[#d8e9c8] bg-[#fcfff9] shadow-[0_6px_0_0_#deedd0] p-5 md:p-6 flex flex-col gap-5"
+      className="rounded-3xl border border-[var(--color-surface-border)] bg-[var(--color-surface-soft)] shadow-[0_6px_0_0_var(--color-surface-border)] p-5 md:p-6 flex flex-col gap-5"
       style={{ scrollMarginTop: '6rem' }}
       aria-labelledby="guided-review-heading"
     >
@@ -317,7 +317,7 @@ export default function GuidedReview({
             Start with an overview, then review each finding with practical fixes.
           </p>
         </div>
-        <span className="text-xs font-semibold text-[var(--color-text-muted)] rounded-full border border-[#d8e9c8] bg-white px-2.5 py-1 shadow-[0_1px_0_0_#deedd0]">
+        <span className="text-xs font-semibold text-[var(--color-text-muted)] rounded-full border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] px-2.5 py-1 shadow-[0_1px_0_0_var(--color-surface-border)]">
           {step === STEPS.OVERVIEW && 'Step 1 of 3'}
           {step === STEPS.FINDING && 'Step 2 of 3'}
           {step === STEPS.RECAP && 'Step 3 of 3'}
@@ -344,7 +344,7 @@ export default function GuidedReview({
                       ? 'bg-[var(--color-cta-bg)] border-[var(--color-cta-bg)]'
                       : isCompleted
                         ? 'bg-[#dbeec8] border-[#c5e2a9]'
-                        : 'bg-[#edf5e4] border-[#d8e9c8]',
+                        : 'bg-[var(--color-surface-soft)] border-[var(--color-surface-border)]',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
                     isAnimating ? 'pointer-events-none' : '',
                   ].join(' ')}
@@ -395,7 +395,7 @@ export default function GuidedReview({
         />
       )}
 
-      <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e2efd7] pt-4">
+      <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-surface-border)] pt-4">
         <button
           type="button"
           onClick={handlePrevious}
@@ -403,8 +403,8 @@ export default function GuidedReview({
           className={[
             'text-sm font-semibold rounded-xl border px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
             step === STEPS.OVERVIEW || isAnimating
-              ? 'border-[#d8e9c8] text-[#546748] bg-[#eef7e5] cursor-not-allowed'
-              : 'border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] hover:border-[#f97316] hover:text-[var(--color-text-primary)] cursor-pointer',
+              ? 'border-[var(--color-surface-border)] text-[#546748] bg-[#eef7e5] cursor-not-allowed'
+              : 'border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] cursor-pointer',
           ].join(' ')}
         >
           Previous

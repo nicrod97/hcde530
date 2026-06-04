@@ -42,7 +42,7 @@ export default function SessionHistory({
 
   if (!sessions || sessions.length === 0) {
     return (
-      <section className="rounded-2xl border border-[#d8e9c8] bg-white p-4 shadow-[0_3px_0_0_#deedd0]">
+      <section className="rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] p-4 shadow-[0_3px_0_0_var(--color-surface-border)]">
         <h2 className="text-sm font-bold text-[var(--color-text-primary)]">Recent analyses</h2>
         <p className="mt-2 text-xs text-[var(--color-text-muted)]">
           Your completed analyses will appear here.
@@ -52,7 +52,7 @@ export default function SessionHistory({
   }
 
   return (
-    <section className="rounded-2xl border border-[#d8e9c8] bg-white p-3.5 flex flex-col gap-3 shadow-[0_3px_0_0_#deedd0]">
+    <section className="rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] p-3.5 flex flex-col gap-3 shadow-[0_3px_0_0_var(--color-surface-border)]">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-bold text-[var(--color-text-primary)]">Recent analyses</h2>
         <button
@@ -68,12 +68,12 @@ export default function SessionHistory({
         {displayedSessions.map((session) => (
           <li
             key={session.id}
-            className="rounded-xl border border-[#d8e9c8] p-2 flex items-center gap-2.5 bg-[#fcfff9]"
+            className="rounded-xl border border-[var(--color-surface-border)] p-2 flex items-center gap-2.5 bg-[var(--color-surface-soft)]"
           >
             <img
               src={session.thumbnailDataUrl || '/favicon.svg'}
               alt="Saved session screenshot preview"
-              className="w-12 h-12 rounded-lg border border-[#d8e9c8] object-cover flex-shrink-0 bg-[#eef7e5]"
+              className="w-12 h-12 rounded-lg border border-[var(--color-surface-border)] object-cover flex-shrink-0 bg-[var(--color-surface-soft)]"
             />
             <div className="min-w-0 flex-1">
               <p className="text-[11px] font-semibold text-[var(--color-text-primary)] truncate">
@@ -91,7 +91,7 @@ export default function SessionHistory({
                 type="button"
                 onClick={() => onOpen(session)}
                 aria-label={`Open ${sessionLabel(session)}`}
-                className="text-[10px] font-semibold px-2 py-1 rounded-lg border border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[#f97316] transition-colors cursor-pointer"
+                className="text-[10px] font-semibold px-2 py-1 rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-focus-accent)] transition-colors cursor-pointer"
               >
                 Open
               </button>
