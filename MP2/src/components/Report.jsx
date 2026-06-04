@@ -153,7 +153,7 @@ export default function Report({
             <button
               type="button"
               onClick={handleRequestBrowseReport}
-              className="text-xs font-semibold rounded-xl border border-[#cfe4b5] bg-white text-[var(--color-text-secondary)] px-3 py-1.5 hover:border-[#f97316] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer shadow-[0_1px_0_0_#deedd0]"
+              className="text-sm font-semibold rounded-xl bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] px-4 py-2 hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] transition-all cursor-pointer shadow-[0_3px_0_0_var(--color-cta-shadow)]"
             >
               Show full report
             </button>
