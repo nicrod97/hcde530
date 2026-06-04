@@ -62,7 +62,7 @@ export default function FindingCard({ finding }) {
         </div>
 
         {/* Title — dominant */}
-        <h3 id={titleId} className="font-bold text-[var(--color-text-primary)] text-[14px] leading-snug">
+        <h3 id={titleId} className="font-bold text-[var(--color-text-primary)] text-base leading-snug">
           {title}
         </h3>
 

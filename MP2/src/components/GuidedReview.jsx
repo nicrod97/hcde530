@@ -28,6 +28,7 @@ export default function GuidedReview({
   const [targetIndex, setTargetIndex] = useState(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isSettlingSwipe, setIsSettlingSwipe] = useState(false);
+  const guidedReviewRef = useRef(null);
   const pointerRef = useRef({
     id: null,
     startX: 0,
@@ -85,6 +86,15 @@ export default function GuidedReview({
       return false;
     }
     return navigateToIndex(findingIndex - 1, 'prev');
+  }
+
+  function handleJumpToFinding(nextIndex) {
+    if (step !== STEPS.FINDING || isAnimating) return;
+    if (nextIndex < 0 || nextIndex >= findings.length) return;
+    if (nextIndex === findingIndex) return;
+
+    const direction = nextIndex > findingIndex ? 'next' : 'prev';
+    navigateToIndex(nextIndex, direction);
   }
 
   function handleNext() {
@@ -259,6 +269,20 @@ export default function GuidedReview({
     return () => window.clearTimeout(inTimer);
   }, [animPhase]);
 
+  useEffect(() => {
+    if (step !== STEPS.FINDING) return;
+    if (!prefersReducedMotion && animPhase !== 'idle') return;
+
+    const rafId = window.requestAnimationFrame(() => {
+      guidedReviewRef.current?.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    });
+
+    return () => window.cancelAnimationFrame(rafId);
+  }, [findingIndex, animPhase, step, prefersReducedMotion]);
+
   const cardTranslatePercent =
     animPhase === 'out'
       ? (navDirection === 'next' ? -100 : 100)
@@ -277,7 +301,12 @@ export default function GuidedReview({
         : 'none';
 
   return (
-    <section className="rounded-3xl border border-[#d8e9c8] bg-[#fcfff9] shadow-[0_6px_0_0_#deedd0] p-5 md:p-6 flex flex-col gap-5" aria-labelledby="guided-review-heading">
+    <section
+      ref={guidedReviewRef}
+      className="rounded-3xl border border-[#d8e9c8] bg-[#fcfff9] shadow-[0_6px_0_0_#deedd0] p-5 md:p-6 flex flex-col gap-5"
+      style={{ scrollMarginTop: '6rem' }}
+      aria-labelledby="guided-review-heading"
+    >
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#5a49bc]">Guided review</p>
@@ -294,6 +323,40 @@ export default function GuidedReview({
           {step === STEPS.RECAP && 'Step 3 of 3'}
         </span>
       </header>
+
+      {step === STEPS.FINDING && findings.length > 0 && (
+        <div className="flex flex-col gap-1.5" role="group" aria-label="Finding progress">
+          <div className="flex items-center gap-1.5">
+            {findings.map((finding, index) => {
+              const isCurrent = index === findingIndex;
+              const isCompleted = index < findingIndex;
+
+              return (
+                <button
+                  key={finding.id || index}
+                  type="button"
+                  onClick={() => handleJumpToFinding(index)}
+                  aria-label={`Go to finding ${index + 1} of ${findings.length}`}
+                  aria-current={isCurrent ? 'step' : undefined}
+                  className={[
+                    'h-2 flex-1 rounded-full border transition-colors cursor-pointer',
+                    isCurrent
+                      ? 'bg-[var(--color-cta-bg)] border-[var(--color-cta-bg)]'
+                      : isCompleted
+                        ? 'bg-[#dbeec8] border-[#c5e2a9]'
+                        : 'bg-[#edf5e4] border-[#d8e9c8]',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
+                    isAnimating ? 'pointer-events-none' : '',
+                  ].join(' ')}
+                />
+              );
+            })}
+          </div>
+          <p className="text-xs text-[var(--color-text-muted)] tabular-nums">
+            Finding {displayIndex + 1} of {findings.length}
+          </p>
+        </div>
+      )}
 
       {step === STEPS.OVERVIEW && (
         <EducationalOverview summary={summary} findings={findings} />

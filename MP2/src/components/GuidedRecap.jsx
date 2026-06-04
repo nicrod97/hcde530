@@ -15,7 +15,7 @@ function Section({ title, subtitle, items }) {
   return (
     <section className="rounded-2xl border border-[#d8e9c8] bg-white p-4 flex flex-col gap-2 shadow-[0_2px_0_0_#deedd0]">
       <div>
-        <h4 className="text-sm font-bold text-[var(--color-text-primary)]">{title}</h4>
+        <h4 className="text-base font-bold text-[var(--color-text-primary)]">{title}</h4>
         <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{subtitle}</p>
       </div>
       {items.length === 0 ? (

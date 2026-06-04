@@ -59,7 +59,7 @@ export default function FilterBar({
   return (
     <section className="rounded-2xl border border-[#d8e9c8] bg-white p-4 flex flex-col gap-4 shadow-[0_3px_0_0_#deedd0]" aria-labelledby="filter-findings-heading">
       <div className="flex items-center justify-between gap-3">
-        <h3 id="filter-findings-heading" className="text-sm font-semibold text-[var(--color-text-primary)]">Filter findings</h3>
+        <h3 id="filter-findings-heading" className="text-base font-semibold tracking-tight text-[var(--color-text-primary)]">Filter findings</h3>
         <div className="flex items-center gap-3">
           <p className="text-xs text-[var(--color-text-muted)] tabular-nums" role="status" aria-live="polite">
             {matchedCount} of {totalCount} findings

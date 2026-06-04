@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import SessionHistory from './SessionHistory.jsx';
 import { PERSONAS } from '../lib/personas.js';
+import landingCharacter from '../assets/landing-character.png';
 
 const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
@@ -61,7 +62,8 @@ export default function LandingPage({
   return (
     <div className="min-h-screen bg-[var(--color-surface-base)] flex flex-col items-center justify-center px-6 py-16">
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-10 lg:gap-12 items-start">
-        <div className="w-full max-w-[560px] flex flex-col gap-12">
+        <div className="relative w-full">
+          <div className="w-full max-w-[560px] flex flex-col gap-12">
 
         {/* Wordmark */}
         <div>
@@ -143,15 +145,12 @@ export default function LandingPage({
             disabled={!step2Active}
           >
             <StepLabel number={2} label="Choose evaluation voice" active={step2Active} />
+            <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
+              Personas adjust the tone and perspective of your recommendations.
+            </p>
 
             <legend className="sr-only">Choose evaluation voice</legend>
             <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Evaluation voice">
-              <PersonaPill
-                label="Base"
-                description="No specific voice — plain neutral recommendations."
-                selected={persona === null}
-                onClick={() => setPersona(null)}
-              />
               {Object.entries(PERSONAS).map(([key, p]) => (
                 <PersonaPill
                   key={key}
@@ -183,6 +182,14 @@ export default function LandingPage({
               {isLoading ? 'Analyzing…' : 'Analyze interface'}
             </button>
           </div>
+          </div>
+
+          <img
+            src={landingCharacter}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none select-none hidden xl:block absolute top-6 right-0 w-44 2xl:w-52 object-contain"
+          />
         </div>
 
         <div className="w-full border-t border-[#d8e9c8] pt-6 lg:border-t-0 lg:pt-0 lg:border-l lg:border-[#d8e9c8] lg:pl-8">

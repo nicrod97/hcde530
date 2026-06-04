@@ -162,49 +162,271 @@ export default function App() {
   function handleExport() {
     if (!report) return;
     const { summary, findings, quick_wins } = report;
-    const lines = [];
-    lines.push('EVALBRIDGE REPORT');
-    lines.push('=================');
-    lines.push('');
-    lines.push('SUMMARY');
-    lines.push('-------');
-    lines.push(`Total findings: ${summary.total}`);
-    lines.push(`  Critical: ${summary.critical}`);
-    lines.push(`  Major:    ${summary.major}`);
-    lines.push(`  Minor:    ${summary.minor}`);
-    lines.push(`  Cosmetic: ${summary.cosmetic}`);
-    lines.push('');
-    if (quick_wins && quick_wins.length > 0) {
-      lines.push('QUICK WINS');
-      lines.push('----------');
-      quick_wins.forEach((win) => {
-        lines.push(`[${win.finding_id}] ${win.title}`);
-        lines.push(`  ${win.why}`);
-      });
-      lines.push('');
+    const quickWins = Array.isArray(quick_wins) ? quick_wins : [];
+    const exportDate = new Date().toLocaleString();
+
+    const escapeHtml = (value) => String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+
+    const summaryCards = [
+      { label: 'Total', value: summary?.total ?? 0 },
+      { label: 'Critical', value: summary?.critical ?? 0 },
+      { label: 'Major', value: summary?.major ?? 0 },
+      { label: 'Minor', value: summary?.minor ?? 0 },
+      { label: 'Cosmetic', value: summary?.cosmetic ?? 0 },
+    ].map((item) => `
+      <div class="summary-card">
+        <p class="summary-label">${escapeHtml(item.label)}</p>
+        <p class="summary-value">${escapeHtml(item.value)}</p>
+      </div>
+    `).join('');
+
+    const quickWinsMarkup = quickWins.length > 0
+      ? `
+        <section class="panel">
+          <h2>Quick Wins</h2>
+          <div class="stack">
+            ${quickWins.map((win) => `
+              <article class="finding-item">
+                <p class="finding-title">[${escapeHtml(win.finding_id)}] ${escapeHtml(win.title)}</p>
+                <p class="body-text">${escapeHtml(win.why)}</p>
+              </article>
+            `).join('')}
+          </div>
+        </section>
+      `
+      : '';
+
+    const findingsMarkup = findings.map((finding, index) => `
+      <article class="panel finding-panel">
+        <p class="finding-kicker">Finding ${index + 1}</p>
+        <h3>${escapeHtml(finding.title)}</h3>
+        <p class="meta">
+          <strong>${escapeHtml((finding.severity || '').toUpperCase())}</strong>
+          · ${escapeHtml(finding.category)}
+          · ${escapeHtml(finding.effort)} effort
+          · ID ${escapeHtml(finding.id)}
+        </p>
+        ${finding.heuristic ? `<p class="meta">Heuristic: ${escapeHtml(finding.heuristic)}</p>` : ''}
+        ${finding.wcag ? `<p class="meta">WCAG: ${escapeHtml(finding.wcag)}</p>` : ''}
+        <p class="section-label">Description</p>
+        <p class="body-text">${escapeHtml(finding.description)}</p>
+        <p class="section-label">Recommendation</p>
+        <p class="body-text">${escapeHtml(finding.recommendation)}</p>
+      </article>
+    `).join('');
+
+    const html = `
+      <!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>CYW Report</title>
+          <style>
+            :root {
+              --color-surface-base: #f9fff4;
+              --color-surface-border: #d8e9c8;
+              --color-text-primary: #1a1a1a;
+              --color-text-secondary: #2f2f2f;
+              --color-text-muted: #404040;
+              --color-cta-bg: #f97316;
+              --color-cta-text: #ffffff;
+            }
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              padding: 32px;
+              background: var(--color-surface-base);
+              color: var(--color-text-primary);
+              font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+              line-height: 1.45;
+            }
+            .container {
+              max-width: 960px;
+              margin: 0 auto;
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+            }
+            h1, h2, h3 {
+              margin: 0;
+              font-family: Nunito, Inter, ui-sans-serif, system-ui, sans-serif;
+              letter-spacing: -0.02em;
+              color: var(--color-text-primary);
+            }
+            h1 { font-size: 38px; font-weight: 900; }
+            h2 { font-size: 22px; font-weight: 800; }
+            h3 { font-size: 18px; font-weight: 800; }
+            .brand {
+              display: inline-block;
+              margin-bottom: 8px;
+              font-size: 12px;
+              font-weight: 800;
+              letter-spacing: 0.14em;
+              text-transform: uppercase;
+              color: var(--color-text-muted);
+            }
+            .export-date {
+              margin: 6px 0 0;
+              color: var(--color-text-muted);
+              font-size: 13px;
+            }
+            .panel {
+              background: #ffffff;
+              border: 1px solid var(--color-surface-border);
+              border-radius: 18px;
+              padding: 18px 20px;
+              box-shadow: 0 3px 0 0 #deedd0;
+            }
+            .summary-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+              gap: 10px;
+              margin-top: 14px;
+            }
+            .summary-card {
+              border: 1px solid var(--color-surface-border);
+              border-radius: 12px;
+              padding: 10px 12px;
+              background: #fcfff9;
+            }
+            .summary-label {
+              margin: 0 0 4px;
+              font-size: 11px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 0.12em;
+              color: var(--color-text-muted);
+            }
+            .summary-value {
+              margin: 0;
+              font-size: 24px;
+              font-weight: 900;
+              color: var(--color-text-primary);
+              font-family: Nunito, Inter, ui-sans-serif, system-ui, sans-serif;
+            }
+            .stack {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              margin-top: 12px;
+            }
+            .finding-item {
+              border: 1px solid var(--color-surface-border);
+              border-radius: 12px;
+              background: #fcfff9;
+              padding: 10px 12px;
+            }
+            .finding-panel {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+            }
+            .finding-kicker {
+              margin: 0;
+              font-size: 11px;
+              font-weight: 800;
+              letter-spacing: 0.12em;
+              text-transform: uppercase;
+              color: var(--color-cta-bg);
+            }
+            .finding-title {
+              margin: 0 0 4px;
+              font-size: 16px;
+              font-weight: 800;
+              color: var(--color-text-primary);
+            }
+            .meta {
+              margin: 0;
+              color: var(--color-text-muted);
+              font-size: 13px;
+            }
+            .section-label {
+              margin: 4px 0 0;
+              font-size: 11px;
+              font-weight: 800;
+              letter-spacing: 0.12em;
+              text-transform: uppercase;
+              color: var(--color-text-muted);
+            }
+            .body-text {
+              margin: 0;
+              color: var(--color-text-secondary);
+              font-size: 14px;
+            }
+            @page {
+              size: auto;
+              margin: 14mm;
+            }
+            @media print {
+              body {
+                padding: 0;
+                background: #ffffff;
+              }
+              .container {
+                max-width: none;
+                gap: 14px;
+              }
+              .panel,
+              .finding-item,
+              .summary-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <header>
+              <span class="brand">CYW! · Check your Work</span>
+              <h1>Interface Evaluation Report</h1>
+              <p class="export-date">Exported ${escapeHtml(exportDate)}</p>
+            </header>
+
+            <section class="panel">
+              <h2>Summary</h2>
+              <div class="summary-grid">${summaryCards}</div>
+            </section>
+
+            ${quickWinsMarkup}
+
+            <section class="stack">
+              <h2>Findings</h2>
+              ${findingsMarkup}
+            </section>
+          </div>
+          <script>
+            window.addEventListener('load', () => {
+              setTimeout(() => {
+                window.focus();
+                window.print();
+              }, 180);
+            });
+          </script>
+        </body>
+      </html>
+    `;
+    const printWindow = window.open('', '_blank');
+
+    if (printWindow) {
+      printWindow.document.open();
+      printWindow.document.write(html);
+      printWindow.document.close();
+      return;
     }
-    lines.push('FINDINGS');
-    lines.push('--------');
-    findings.forEach((f, i) => {
-      lines.push(`${i + 1}. [${f.severity.toUpperCase()}] ${f.title}`);
-      lines.push(`   ID: ${f.id} | Category: ${f.category} | Effort: ${f.effort}`);
-      if (f.heuristic) lines.push(`   Heuristic: ${f.heuristic}`);
-      if (f.wcag) lines.push(`   WCAG: ${f.wcag}`);
-      lines.push('');
-      lines.push('   Description:');
-      lines.push(`   ${f.description}`);
-      lines.push('');
-      lines.push('   Recommendation:');
-      lines.push(`   ${f.recommendation}`);
-      lines.push('');
-      lines.push('---');
-      lines.push('');
-    });
-    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+
+    // Popup blocked fallback: keep downloadable styled HTML.
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'evalbridge-report.txt';
+    a.download = 'cyw-report.html';
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -212,7 +434,14 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-base)] flex flex-col" aria-busy={status === 'loading'}>
       <header className="sticky top-0 z-10 bg-[#f9fff4]/95 border-b border-[var(--color-surface-border)] px-6 py-4 flex items-center justify-between backdrop-blur-sm">
-        <span className="text-sm font-extrabold tracking-tight text-[var(--color-text-primary)]">EvalBridge</span>
+        <button
+          type="button"
+          onClick={handleNewAnalysis}
+          aria-label="Go to landing page"
+          className="text-[22px] font-black tracking-tighter leading-none text-[var(--color-text-primary)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2 rounded-sm"
+        >
+          CYW!
+        </button>
         <div className="flex items-center gap-2">
           {status === 'success' && report && (
             <button

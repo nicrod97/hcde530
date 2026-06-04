@@ -37,7 +37,7 @@ export default function KanbanBoard({ findings }) {
         return (
           <div key={id} className={`flex flex-col gap-3 border-t-2 pt-4 rounded-2xl bg-[#fcfff9] px-3 pb-3 ${accent}`}>
             <div className="flex items-center gap-2.5 pb-1">
-              <span className={`text-sm font-bold tracking-tight ${header}`}>{label}</span>
+              <span className={`text-base font-bold tracking-tight ${header}`}>{label}</span>
               <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${badge}`}>
                 {cards.length}
               </span>
