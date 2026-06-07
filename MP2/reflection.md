@@ -1,0 +1,17 @@
+## MP2 Reflection
+
+### What did you build?
+
+For MP2, I built **Check your Work!**, a deployed web tool that reviews interface screenshots for usability and accessibility issues. A user uploads a screenshot, can choose an evaluation voice, and gets structured findings with severity, category, effort, and recommendations. The biggest product idea is the guided-first results flow: overview -> finding lessons -> recap, so users can understand what the report means before jumping into detail. For people who want a deeper inspection, the app still includes a full report view with filters and kanban grouping. If I were explaining it to a collaborator, I would call it a practical design-review assistant that combines AI analysis with a clear interpretation layer.
+
+### What decisions did you make?
+
+I chose React + Vite for the frontend and Vercel serverless for the backend because it gave me a fast iteration loop and a clean deployment path. In `api/analyze.js`, Anthropic calls run server-side and `ANTHROPIC_API_KEY` stays in environment variables, which let me keep the app public without exposing secrets. I also scoped the project to static screenshot analysis instead of full interactive flow testing, because that was a realistic scope for this timeline and still produced useful feedback. The biggest design change from my earlier direction was moving from report-first to guided-first: `GuidedReview.jsx` and `GuidedRecap.jsx` now lead users through findings, while `Report.jsx` keeps a full browse mode for advanced users.
+
+### What would you do differently?
+
+If I were building the next version, I would focus first on faster results and then on richer analysis inputs. Right now the tool is useful, but I would optimize the pipeline to reduce waiting time by refining preprocessing, response handling, and rendering so users get feedback quicker without losing report quality. I would also expand beyond single-image analysis by supporting dynamic flows and live URL analysis, so the system can evaluate interaction states (navigation, transitions, form behavior, and feedback loops) instead of only one static moment. That would make the report more complete because many usability and accessibility issues only appear during interaction, not in a screenshot. I would keep the guided-first presentation, but feed it interaction-aware findings so the walkthrough reflects real user journeys end to end.
+
+### What does this work demonstrate?
+
+This project demonstrates `C1`, `C4`, `C7`, and `C8` through concrete implementation and delivery choices. `C1` shows up in the iterative prototyping process (Claude Code + Cursor), where I refined the results experience until the guided flow was clear and usable. `C4` is represented by the serverless API integration in `api/analyze.js`, including secure environment-variable handling for the Anthropic key. `C7` is reflected in `src/lib/api.js`, where I treat model output as untrusted and apply validation, normalization, and fallback repair before rendering. `C8` is demonstrated by the deployed end-to-end product, a live URL, complete user workflow, and external-facing documentation that explains who the tool is for and how to use it.
