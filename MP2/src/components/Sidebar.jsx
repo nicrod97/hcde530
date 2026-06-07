@@ -63,7 +63,7 @@ export default function Sidebar({ onAnalyze, isLoading }) {
     <aside className="w-full md:w-[280px] md:min-w-[280px] bg-white border-r border-gray-200 flex flex-col p-5 gap-5 md:h-screen md:sticky md:top-0 md:overflow-y-auto">
       {/* Wordmark */}
       <div className="pt-1">
-        <span className="text-xl font-semibold tracking-tight text-gray-900">EvalBridge</span>
+        <span className="text-xl font-semibold tracking-tight text-gray-900">Check your Work!</span>
         <p className="text-xs text-gray-400 mt-0.5 leading-snug">Heuristic &amp; accessibility evaluator</p>
       </div>
 

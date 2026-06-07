@@ -5,7 +5,7 @@ import SessionHistory from './components/SessionHistory.jsx';
 import SlideOverPanel from './components/SlideOverPanel.jsx';
 import { analyzeInterface, createThumbnailDataUrl } from './lib/api.js';
 
-const STORAGE_KEY = 'evalbridge.sessions.v1';
+const STORAGE_KEY = 'check-your-work.sessions.v1';
 const MAX_SESSIONS = 25;
 const LOADING_MESSAGES = [
   'Preparing screenshot for analysis',
@@ -386,7 +386,7 @@ export default function App() {
         <body>
           <div class="container">
             <header>
-              <span class="brand">CYW! · Check your Work</span>
+              <span class="brand">Check your Work!</span>
               <h1>Interface Evaluation Report</h1>
               <p class="export-date">Exported ${escapeHtml(exportDate)}</p>
             </header>
@@ -442,7 +442,7 @@ export default function App() {
           aria-label="Go to landing page"
           className="text-[20px] font-black tracking-tighter leading-none text-[var(--color-text-primary)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2 rounded-sm"
         >
-          CYW!
+          Check your Work!
         </button>
         <div className="flex items-center gap-2">
           {status === 'success' && report && (
