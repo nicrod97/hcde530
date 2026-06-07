@@ -76,7 +76,7 @@ export default function Report({
   return (
     <main className="flex flex-col gap-8" aria-label="Evaluation report">
       <div className="lg:flex lg:items-stretch lg:gap-8">
-        <aside className="hidden lg:block lg:w-28 xl:w-32 flex-shrink-0" aria-hidden="true">
+        <aside className="hidden lg:block lg:w-24 xl:w-28 flex-shrink-0" aria-hidden="true">
           <div className="lg:sticky lg:top-24">
             <img
               src={reportCharacter}
@@ -86,20 +86,18 @@ export default function Report({
           </div>
         </aside>
 
-        <div className="flex-1 min-w-0 flex flex-col gap-8">
-          <section className="bg-[#eef2ff] border border-[#c9d6ff] rounded-2xl px-6 py-4 flex flex-col gap-2 shadow-[0_2px_0_0_#c9d6ff]" aria-labelledby="confidence-note-heading">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700">
-              <span id="confidence-note-heading">
-              Confidence note
-              </span>
+        <div className="flex-1 min-w-0 flex flex-col gap-6">
+          <section className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-4 flex flex-col gap-2" aria-labelledby="confidence-note-heading">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-600">
+              <span id="confidence-note-heading">Confidence note</span>
             </p>
-            <p className="text-sm text-[#344584] leading-relaxed">
+            <p className="text-sm text-blue-800 leading-relaxed">
               This report is based on a static screenshot, so it may miss interaction-only issues
               (flows, keyboard behavior, timing, and dynamic states). Treat findings as prioritized
               guidance, then verify fixes in real usage and accessibility testing.
             </p>
             {_validationWarnings?.length > 0 && (
-              <p className="text-xs text-[#3f4f8f]" role="status" aria-live="polite">
+              <p className="text-xs text-blue-600" role="status" aria-live="polite">
                 Some model output was normalized for consistency before display.
               </p>
             )}
@@ -108,15 +106,15 @@ export default function Report({
           {/* Persona written summary — card at top */}
           {persona_take && persona_take.trim() && (
             <section
-              className="bg-[var(--color-surface-card)] rounded-2xl border border-[var(--color-surface-border)] px-6 py-5 flex flex-col gap-2 shadow-[0_3px_0_0_var(--color-surface-border)]"
+              className="bg-white rounded-xl border border-[var(--color-surface-border)] px-5 py-4 flex flex-col gap-2"
               aria-labelledby="persona-perspective-heading"
             >
               {personaLabel && (
                 <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-violet-500 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0" />
                   <p
                     id="persona-perspective-heading"
-                    className="text-[10px] font-bold text-[#5747b2] uppercase tracking-[0.2em]"
+                    className="text-[10px] font-bold text-violet-600 uppercase tracking-[0.2em]"
                   >
                     {personaLabel} perspective
                   </p>
@@ -140,9 +138,9 @@ export default function Report({
         style={{ scrollMarginTop: '6rem' }}
         aria-labelledby="browse-report-heading"
       >
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-surface-border)] pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-surface-border)] pb-4">
           <div>
-            <h2 id="browse-report-heading" className="text-lg font-bold text-[var(--color-text-primary)] tracking-tight">
+            <h2 id="browse-report-heading" className="text-base font-bold text-[var(--color-text-primary)] tracking-tight">
               Browse full report
             </h2>
             <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
@@ -153,7 +151,7 @@ export default function Report({
             <button
               type="button"
               onClick={handleRequestBrowseReport}
-              className="text-sm font-semibold rounded-xl bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] px-4 py-2 hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] transition-all cursor-pointer shadow-[0_3px_0_0_var(--color-cta-shadow)]"
+              className="text-sm font-bold rounded-lg bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] px-4 py-2 hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] transition-all cursor-pointer shadow-[0_2px_0_0_var(--color-cta-shadow)]"
             >
               Show full report
             </button>
@@ -161,7 +159,7 @@ export default function Report({
             <button
               type="button"
               onClick={() => setShowBrowseReport(false)}
-              className="text-xs font-semibold rounded-xl border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] px-3 py-1.5 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer shadow-[0_1px_0_0_var(--color-surface-border)]"
+              className="text-xs font-semibold rounded-lg border border-[var(--color-surface-border)] bg-white text-[var(--color-text-secondary)] px-3 py-1.5 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
             >
               Hide full report
             </button>
