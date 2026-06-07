@@ -434,13 +434,13 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-base)] flex flex-col" aria-busy={status === 'loading'}>
-      <header className="sticky top-0 z-10 bg-[#f9fff4]/95 border-b border-[var(--color-surface-border)] px-6 py-4 flex items-center justify-between backdrop-blur-sm">
+    <div className="min-h-screen bg-white flex flex-col" aria-busy={status === 'loading'}>
+      <header className="sticky top-0 z-10 bg-white/95 border-b border-[var(--color-surface-border)] px-6 py-4 flex items-center justify-between backdrop-blur-sm shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
         <button
           type="button"
           onClick={handleNewAnalysis}
           aria-label="Go to landing page"
-          className="text-[22px] font-black tracking-tighter leading-none text-[var(--color-text-primary)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2 rounded-sm"
+          className="text-[20px] font-black tracking-tighter leading-none text-[var(--color-text-primary)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2 rounded-sm"
         >
           CYW!
         </button>
@@ -448,7 +448,7 @@ export default function App() {
           {status === 'success' && report && (
             <button
               onClick={handleExport}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] rounded-xl px-3 py-1.5 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-all cursor-pointer shadow-[0_1px_0_0_var(--color-surface-border)]"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold border border-[var(--color-surface-border)] bg-white text-[var(--color-text-secondary)] rounded-lg px-3 py-2 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-all cursor-pointer"
             >
               <DownloadIcon />
               Export
@@ -461,21 +461,21 @@ export default function App() {
               onClick={() => setShowRecentSidebar((v) => !v)}
               aria-expanded={showRecentSidebar}
               aria-controls="recent-analyses-panel"
-              className="text-xs font-semibold border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] rounded-xl px-3 py-1.5 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-all cursor-pointer shadow-[0_1px_0_0_var(--color-surface-border)]"
+              className="text-xs font-semibold border border-[var(--color-surface-border)] bg-white text-[var(--color-text-secondary)] rounded-lg px-3 py-2 hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] transition-all cursor-pointer"
             >
-              {showRecentSidebar ? 'Hide recent analyses' : 'Show recent analyses'}
+              {showRecentSidebar ? 'Hide recent' : 'Recent analyses'}
             </button>
           )}
           <button
             onClick={handleNewAnalysis}
-            className="text-xs font-semibold bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] rounded-xl px-3 py-1.5 hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] transition-all cursor-pointer shadow-[0_3px_0_0_var(--color-cta-shadow)]"
+            className="text-xs font-semibold bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] rounded-lg px-3 py-2 hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] transition-all cursor-pointer shadow-[0_2px_0_0_var(--color-cta-shadow)]"
           >
             + New analysis
           </button>
         </div>
       </header>
 
-      <main ref={responseRef} className="flex-1 w-full max-w-6xl mx-auto px-6 py-10">
+      <main ref={responseRef} className="flex-1 w-full max-w-5xl mx-auto px-6 py-10">
         {status === 'loading' && (
           <div
             className="flex flex-col items-center justify-center min-h-[360px] gap-4"

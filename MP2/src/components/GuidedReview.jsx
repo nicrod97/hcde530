@@ -303,21 +303,21 @@ export default function GuidedReview({
   return (
     <section
       ref={guidedReviewRef}
-      className="rounded-3xl border border-[var(--color-surface-border)] bg-[var(--color-surface-soft)] shadow-[0_6px_0_0_var(--color-surface-border)] p-5 md:p-6 flex flex-col gap-5"
+      className="rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-soft)] p-5 md:p-7 flex flex-col gap-5"
       style={{ scrollMarginTop: '6rem' }}
       aria-labelledby="guided-review-heading"
     >
       <header className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#5a49bc]">Guided review</p>
-          <h2 id="guided-review-heading" className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
+        <div className="flex flex-col gap-1.5">
+          <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--color-cta-bg)]">Guided review</p>
+          <h2 id="guided-review-heading" className="text-lg font-bold tracking-tight text-[var(--color-text-primary)]">
             Learn from the report, step by step
           </h2>
-          <p className="text-sm text-[var(--color-text-secondary)]">
+          <p className="text-sm text-[var(--color-text-muted)]">
             Start with an overview, then review each finding with practical fixes.
           </p>
         </div>
-        <span className="text-xs font-semibold text-[var(--color-text-muted)] rounded-full border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] px-2.5 py-1 shadow-[0_1px_0_0_var(--color-surface-border)]">
+        <span className="text-[11px] font-semibold text-[var(--color-text-muted)] rounded-lg border border-[var(--color-surface-border)] bg-white px-2.5 py-1">
           {step === STEPS.OVERVIEW && 'Step 1 of 3'}
           {step === STEPS.FINDING && 'Step 2 of 3'}
           {step === STEPS.RECAP && 'Step 3 of 3'}
@@ -401,10 +401,10 @@ export default function GuidedReview({
           onClick={handlePrevious}
           disabled={step === STEPS.OVERVIEW || isAnimating}
           className={[
-            'text-sm font-semibold rounded-xl border px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
+            'text-sm font-semibold rounded-lg border px-4 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
             step === STEPS.OVERVIEW || isAnimating
-              ? 'border-[var(--color-surface-border)] text-[#546748] bg-[#eef7e5] cursor-not-allowed'
-              : 'border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] cursor-pointer',
+              ? 'border-[var(--color-surface-border)] text-[var(--color-text-muted)] bg-white/60 cursor-not-allowed'
+              : 'border-[var(--color-surface-border)] bg-white text-[var(--color-text-secondary)] hover:border-[var(--color-focus-accent)] hover:text-[var(--color-text-primary)] cursor-pointer',
           ].join(' ')}
         >
           Previous
@@ -415,10 +415,10 @@ export default function GuidedReview({
           onClick={handleNext}
           disabled={step === STEPS.RECAP || isAnimating}
           className={[
-            'text-sm font-semibold rounded-xl px-3 py-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
+            'text-sm font-bold rounded-lg px-4 py-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-focus-accent)] focus-visible:ring-offset-2',
             step === STEPS.RECAP || isAnimating
-              ? 'bg-[#e7f3d9] text-[#5a6e4f] cursor-not-allowed shadow-none'
-              : 'bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] cursor-pointer shadow-[0_3px_0_0_var(--color-cta-shadow)]',
+              ? 'bg-white/60 text-[var(--color-text-muted)] cursor-not-allowed border border-[var(--color-surface-border)]'
+              : 'bg-[var(--color-cta-bg)] text-[var(--color-cta-text)] hover:bg-[var(--color-cta-hover)] active:translate-y-[1px] cursor-pointer shadow-[0_2px_0_0_var(--color-cta-shadow)]',
           ].join(' ')}
         >
           {step === STEPS.OVERVIEW && (findings.length > 0 ? 'Start walkthrough' : 'View recap')}

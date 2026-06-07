@@ -42,9 +42,9 @@ export default function SessionHistory({
 
   if (!sessions || sessions.length === 0) {
     return (
-      <section className="rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] p-4 shadow-[0_3px_0_0_var(--color-surface-border)]">
-        <h2 className="text-sm font-bold text-[var(--color-text-primary)]">Recent analyses</h2>
-        <p className="mt-2 text-xs text-[var(--color-text-muted)]">
+      <section className="rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-soft)] p-5">
+        <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">Recent analyses</h2>
+        <p className="mt-3 text-sm text-[var(--color-text-muted)]">
           Your completed analyses will appear here.
         </p>
       </section>
@@ -52,15 +52,15 @@ export default function SessionHistory({
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] p-3.5 flex flex-col gap-3 shadow-[0_3px_0_0_var(--color-surface-border)]">
+    <section className="rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-soft)] p-5 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-bold text-[var(--color-text-primary)]">Recent analyses</h2>
+        <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">Recent analyses</h2>
         <button
           type="button"
           onClick={onClear}
-          className="text-[11px] font-semibold text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+          className="text-[11px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
         >
-          Clear history
+          Clear all
         </button>
       </div>
 
@@ -68,30 +68,31 @@ export default function SessionHistory({
         {displayedSessions.map((session) => (
           <li
             key={session.id}
-            className="rounded-xl border border-[var(--color-surface-border)] p-2 flex items-center gap-2.5 bg-[var(--color-surface-soft)]"
+            className="rounded-xl border border-[var(--color-surface-border)] bg-white px-3 py-2.5 flex items-center gap-3"
           >
             <img
               src={session.thumbnailDataUrl || '/favicon.svg'}
-              alt="Saved session screenshot preview"
-              className="w-12 h-12 rounded-lg border border-[var(--color-surface-border)] object-cover flex-shrink-0 bg-[var(--color-surface-soft)]"
+              alt=""
+              aria-hidden="true"
+              className="w-10 h-10 rounded-lg border border-[var(--color-surface-border)] object-cover flex-shrink-0 bg-[var(--color-surface-soft)]"
             />
             <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-semibold text-[var(--color-text-primary)] truncate">
+              <p className="text-xs font-semibold text-[var(--color-text-primary)] truncate leading-snug">
                 {personaLabel(session.personaKey, session.report?.persona)}
               </p>
-              <p className="text-[10px] text-[var(--color-text-muted)] truncate">
+              <p className="text-[11px] text-[var(--color-text-muted)] truncate mt-0.5">
+                {session.summary?.total ?? 0} findings · {session.summary?.critical ?? 0} critical
+              </p>
+              <p className="text-[10px] text-[var(--color-text-muted)] truncate mt-0.5">
                 {formatWhen(session.createdAt)}
               </p>
-              <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">
-                {session.summary?.total ?? 0} findings, {session.summary?.critical ?? 0} critical
-              </p>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 flex-shrink-0">
               <button
                 type="button"
                 onClick={() => onOpen(session)}
                 aria-label={`Open ${sessionLabel(session)}`}
-                className="text-[10px] font-semibold px-2 py-1 rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-card)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-focus-accent)] transition-colors cursor-pointer"
+                className="text-[11px] font-semibold px-2.5 py-1.5 rounded-lg bg-[var(--color-cta-bg)] text-white hover:bg-[var(--color-cta-hover)] transition-colors cursor-pointer"
               >
                 Open
               </button>
@@ -99,9 +100,11 @@ export default function SessionHistory({
                 type="button"
                 onClick={() => onDelete(session.id)}
                 aria-label={`Delete ${sessionLabel(session)}`}
-                className="text-[10px] font-semibold px-2 py-1 rounded-lg border border-red-200 bg-white text-red-500 hover:text-red-700 hover:border-red-300 transition-colors cursor-pointer"
+                className="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--color-text-muted)] hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
               >
-                Delete
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
               </button>
             </div>
           </li>
@@ -115,7 +118,7 @@ export default function SessionHistory({
           className="self-start text-[11px] font-semibold text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
         >
           {isExpanded
-            ? `Show less`
+            ? 'Show less'
             : `Show ${allSessions.length - initialVisibleCount} more`}
         </button>
       )}
